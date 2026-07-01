@@ -1,0 +1,17 @@
+name: Teamdesk build
+on:
+  workflow_dispatch:
+    inputs:
+      upload-artifact:
+        description: "Upload artifacts / publish release"
+        type: boolean
+        default: true
+jobs:
+  build:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/flutter-build.yml
+    with:
+      upload-artifact: ${{ inputs.upload-artifact }}
+      upload-tag: "teamdesk-nightly"
+    secrets: inherit
