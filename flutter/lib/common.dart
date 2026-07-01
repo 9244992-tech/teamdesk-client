@@ -744,12 +744,12 @@ Future<void> windowOnTop(int? id) async {
     }
     await windowManager.show();
     await windowManager.focus();
-    await rustDeskWinManager.registerActiveWindow(kWindowMainId);
+    await teamDeskWinManager.registerActiveWindow(kWindowMainId);
   } else {
     WindowController.fromWindowId(id)
       ..focus()
       ..show();
-    rustDeskWinManager.call(WindowType.Main, kWindowEventShow, {"id": id});
+    teamDeskWinManager.call(WindowType.Main, kWindowEventShow, {"id": id});
   }
 }
 
@@ -1192,7 +1192,7 @@ void msgBox(SessionID sessionId, String type, String title, String text,
     if (onSubmit != null) {
       onSubmit.call();
     } else {
-      // https://github.com/rustdesk/rustdesk/blob/5e9a31340b899822090a3731769ae79c6bf5f3e5/src/ui/common.tis#L263
+      // https://github.com/rustdesk/teamdesk/blob/5e9a31340b899822090a3731769ae79c6bf5f3e5/src/ui/common.tis#L263
       if (!type.contains("custom") && desktopType != DesktopType.portForward) {
         closeConnection();
       }
@@ -1992,7 +1992,7 @@ Future<Offset?> _adjustRestoreMainWindowOffset(
 Future<bool> restoreWindowPosition(WindowType type,
     {int? windowId, String? peerId, int? display}) async {
   if (bind
-      .mainGetEnv(key: "DISABLE_RUSTDESK_RESTORE_WINDOW_POSITION")
+      .mainGetEnv(key: "DISABLE_TEAMDESK_RESTORE_WINDOW_POSITION")
       .isNotEmpty) {
     return false;
   }
@@ -2028,13 +2028,13 @@ Future<bool> restoreWindowPosition(WindowType type,
           await windowManager.center();
         }
         // For MacOS, the window is already centered by default.
-        // See https://github.com/rustdesk/rustdesk/blob/9b9276e7524523d7f667fefcd0694d981443df0e/flutter/macos/Runner/Base.lproj/MainMenu.xib#L333
+        // See https://github.com/rustdesk/teamdesk/blob/9b9276e7524523d7f667fefcd0694d981443df0e/flutter/macos/Runner/Base.lproj/MainMenu.xib#L333
         // If `<windowPositionMask>` in `<window>` is not set, the window will be centered.
         break;
       default:
         // No need to change the position of a sub window if no position is saved,
         // since the default position is already centered.
-        // https://github.com/rustdesk/rustdesk/blob/317639169359936f7f9f85ef445ec9774218772d/flutter/lib/utils/multi_window_manager.dart#L163
+        // https://github.com/rustdesk/teamdesk/blob/317639169359936f7f9f85ef445ec9774218772d/flutter/lib/utils/multi_window_manager.dart#L163
         break;
     }
     return true;
@@ -2091,7 +2091,7 @@ Future<bool> restoreWindowPosition(WindowType type,
             // E.g. There are two monitors, the left one is 100% DPI and the right one is 175% DPI.
             // The window belongs to the left monitor, but if it is moved a little to the right, it will belong to the right monitor.
             // After restoring, the size will be incorrect.
-            // See known issue in https://github.com/rustdesk/rustdesk/pull/9840
+            // See known issue in https://github.com/rustdesk/teamdesk/pull/9840
             await windowManager.setSize(size,
                 ignoreDevicePixelRatio: _ignoreDevicePixelRatio);
           }
@@ -2223,7 +2223,7 @@ bool handleUriLink({List<String>? cmdArgs, Uri? uri, String? uriString}) {
   List<String>? args;
   if (cmdArgs != null && cmdArgs.isNotEmpty) {
     args = cmdArgs;
-    // rustdesk <uri link>
+    // teamdesk <uri link>
     if (args[0].startsWith(bind.mainUriPrefixSync())) {
       final uri = Uri.tryParse(args[0]);
       if (uri != null) {
@@ -2310,7 +2310,7 @@ bool handleUriLink({List<String>? cmdArgs, Uri? uri, String? uriString}) {
     switch (type) {
       case UriLinkType.remoteDesktop:
         Future.delayed(Duration.zero, () {
-          rustDeskWinManager.newRemoteDesktop(id!,
+          teamDeskWinManager.newRemoteDesktop(id!,
               password: password,
               switchUuid: switchUuid,
               forceRelay: forceRelay);
@@ -2318,31 +2318,31 @@ bool handleUriLink({List<String>? cmdArgs, Uri? uri, String? uriString}) {
         break;
       case UriLinkType.fileTransfer:
         Future.delayed(Duration.zero, () {
-          rustDeskWinManager.newFileTransfer(id!,
+          teamDeskWinManager.newFileTransfer(id!,
               password: password, forceRelay: forceRelay);
         });
         break;
       case UriLinkType.viewCamera:
         Future.delayed(Duration.zero, () {
-          rustDeskWinManager.newViewCamera(id!,
+          teamDeskWinManager.newViewCamera(id!,
               password: password, forceRelay: forceRelay);
         });
         break;
       case UriLinkType.portForward:
         Future.delayed(Duration.zero, () {
-          rustDeskWinManager.newPortForward(id!, false,
+          teamDeskWinManager.newPortForward(id!, false,
               password: password, forceRelay: forceRelay);
         });
         break;
       case UriLinkType.rdp:
         Future.delayed(Duration.zero, () {
-          rustDeskWinManager.newPortForward(id!, true,
+          teamDeskWinManager.newPortForward(id!, true,
               password: password, forceRelay: forceRelay);
         });
         break;
       case UriLinkType.terminal:
         Future.delayed(Duration.zero, () {
-          rustDeskWinManager.newTerminal(id!,
+          teamDeskWinManager.newTerminal(id!,
               password: password, forceRelay: forceRelay);
         });
         break;
@@ -2381,7 +2381,7 @@ List<String>? urlLinkToCmdArgs(Uri uri) {
               'Y';
       if (!allowDeepLinkServerSettings) {
         debugPrint(
-            "Ignore rustdesk://config because $kOptionAllowDeepLinkServerSettings is not enabled.");
+            "Ignore teamdesk://config because $kOptionAllowDeepLinkServerSettings is not enabled.");
         // Keep the user-facing error generic; detailed rejection reason is in debug logs.
         // Delay toast to avoid missing overlay during cold-start deeplink handling.
         Timer(Duration(seconds: 1), () {
@@ -2402,7 +2402,7 @@ List<String>? urlLinkToCmdArgs(Uri uri) {
           bind.mainGetBuildinOption(key: kOptionAllowDeepLinkPassword) == 'Y';
       if (!allowDeepLinkPassword) {
         debugPrint(
-            "Ignore rustdesk://password because $kOptionAllowDeepLinkPassword is not enabled.");
+            "Ignore teamdesk://password because $kOptionAllowDeepLinkPassword is not enabled.");
         // Keep the user-facing error generic; detailed rejection reason is in debug logs.
         // Delay toast to avoid missing overlay during cold-start deeplink handling.
         Timer(Duration(seconds: 1), () {
@@ -2427,9 +2427,9 @@ List<String>? urlLinkToCmdArgs(Uri uri) {
   } else if (uri.authority.length > 2 &&
       (uri.path.length <= 1 ||
           (uri.path == '/r' || uri.path.startsWith('/r@')))) {
-    // rustdesk://<connect-id>
-    // rustdesk://<connect-id>/r
-    // rustdesk://<connect-id>/r@<server>
+    // teamdesk://<connect-id>
+    // teamdesk://<connect-id>/r
+    // teamdesk://<connect-id>/r@<server>
     command = '--connect';
     id = uri.authority;
     if (uri.path.length > 1) {
@@ -2499,31 +2499,31 @@ connectMainDesktop(String id,
     String? connToken,
     bool? isSharedPassword}) async {
   if (isFileTransfer) {
-    await rustDeskWinManager.newFileTransfer(id,
+    await teamDeskWinManager.newFileTransfer(id,
         password: password,
         isSharedPassword: isSharedPassword,
         connToken: connToken,
         forceRelay: forceRelay);
   } else if (isViewCamera) {
-    await rustDeskWinManager.newViewCamera(id,
+    await teamDeskWinManager.newViewCamera(id,
         password: password,
         isSharedPassword: isSharedPassword,
         connToken: connToken,
         forceRelay: forceRelay);
   } else if (isTcpTunneling || isRDP) {
-    await rustDeskWinManager.newPortForward(id, isRDP,
+    await teamDeskWinManager.newPortForward(id, isRDP,
         password: password,
         isSharedPassword: isSharedPassword,
         connToken: connToken,
         forceRelay: forceRelay);
   } else if (isTerminal) {
-    await rustDeskWinManager.newTerminal(id,
+    await teamDeskWinManager.newTerminal(id,
         password: password,
         isSharedPassword: isSharedPassword,
         connToken: connToken,
         forceRelay: forceRelay);
   } else {
-    await rustDeskWinManager.newRemoteDesktop(id,
+    await teamDeskWinManager.newRemoteDesktop(id,
         password: password,
         isSharedPassword: isSharedPassword,
         forceRelay: forceRelay);
@@ -2579,7 +2579,7 @@ connect(BuildContext context, String id,
         forceRelay: forceRelay,
       );
     } else {
-      await rustDeskWinManager.call(WindowType.Main, kWindowConnect, {
+      await teamDeskWinManager.call(WindowType.Main, kWindowConnect, {
         'id': id,
         'isFileTransfer': isFileTransfer,
         'isViewCamera': isViewCamera,
@@ -2801,22 +2801,22 @@ bool isRunningInPortableMode() {
 /// Window status callback
 Future<void> onActiveWindowChanged() async {
   print(
-      "[MultiWindowHandler] active window changed: ${rustDeskWinManager.getActiveWindows()}");
-  if (rustDeskWinManager.getActiveWindows().isEmpty) {
+      "[MultiWindowHandler] active window changed: ${teamDeskWinManager.getActiveWindows()}");
+  if (teamDeskWinManager.getActiveWindows().isEmpty) {
     // close all sub windows
     try {
       if (isLinux) {
         await Future.wait([
           saveWindowPosition(WindowType.Main),
-          rustDeskWinManager.closeAllSubWindows()
+          teamDeskWinManager.closeAllSubWindows()
         ]);
       } else {
-        await rustDeskWinManager.closeAllSubWindows();
+        await teamDeskWinManager.closeAllSubWindows();
       }
     } catch (err) {
       debugPrintStack(label: "$err");
     } finally {
-      debugPrint("Start closing RustDesk...");
+      debugPrint("Start closing Teamdesk...");
       await windowManager.setPreventClose(false);
       await windowManager.close();
       if (isMacOS) {
@@ -2832,9 +2832,9 @@ Future<void> onActiveWindowChanged() async {
         //
         //```
         // embedder.cc (2725): 'FlutterPlatformMessageCreateResponseHandle' returned 'kInvalidArguments'. Engine handle was invalid.
-        // 2024-11-11 11:41:11.546 RustDesk[90272:2567686] Failed to create a FlutterPlatformMessageResponseHandle (2)
+        // 2024-11-11 11:41:11.546 Teamdesk[90272:2567686] Failed to create a FlutterPlatformMessageResponseHandle (2)
         // embedder.cc (2672): 'FlutterEngineSendPlatformMessage' returned 'kInvalidArguments'. Invalid engine handle.
-        // 2024-11-11 11:41:11.565 RustDesk[90272:2567686] Failed to send message to Flutter engine on channel 'flutter/lifecycle' (2).
+        // 2024-11-11 11:41:11.565 Teamdesk[90272:2567686] Failed to send message to Flutter engine on channel 'flutter/lifecycle' (2).
         // ```
         periodic_immediate(
             Duration(milliseconds: 30), RdPlatformChannel.instance.terminate);
@@ -2905,7 +2905,7 @@ class ServerConfig {
     this.key = key?.trim() ?? '';
   }
 
-  /// decode from shared string (from user shared or rustdesk-server generated)
+  /// decode from shared string (from user shared or teamdesk-server generated)
   /// also see [encode]
   /// throw when decoding failure
   ServerConfig.decode(String msg) {
@@ -3033,7 +3033,7 @@ Future<void> updateSystemWindowTheme() async {
 ///
 /// Note: not found a general solution for rust based AVFoundation bingding.
 /// [AVFoundation] crate has compile error.
-const kMacOSPermChannel = MethodChannel("org.rustdesk.rustdesk/host");
+const kMacOSPermChannel = MethodChannel("org.teamdesk.teamdesk/host");
 
 enum PermissionAuthorizeType {
   undetermined,
@@ -3302,7 +3302,7 @@ Future<List<Rect>> getScreenListWayland() async {
       screenRectList.add(rect);
     }
   } else {
-    final screenList = await rustDeskWinManager.call(
+    final screenList = await teamDeskWinManager.call(
         WindowType.Main, kWindowGetScreenList, '');
     try {
       for (var screen in jsonDecode(screenList.result) as List<dynamic>) {
@@ -3402,7 +3402,7 @@ setNewConnectWindowFrame(int windowId, String peerId, int preSessionCount,
     WindowType windowType, int? display, Rect? screenRect) async {
   if (screenRect == null) {
     // Do not restore window position to new connection if there's a pre-session.
-    // https://github.com/rustdesk/rustdesk/discussions/8825
+    // https://github.com/rustdesk/teamdesk/discussions/8825
     if (preSessionCount == 0) {
       await restoreWindowPosition(windowType,
           windowId: windowId, display: display, peerId: peerId);
@@ -3697,7 +3697,7 @@ Widget loadPowered(BuildContext context) {
     cursor: SystemMouseCursors.click,
     child: GestureDetector(
       onTap: () {
-        launchUrl(Uri.parse('https://rustdesk.com'));
+        launchUrl(Uri.parse('https://teamdesk.com'));
       },
       child: Opacity(
           opacity: 0.5,
@@ -3823,7 +3823,7 @@ Widget _buildPresetPasswordWarning() {
           style: TextStyle(
             color: Colors.red,
             fontSize:
-                18, // https://github.com/rustdesk/rustdesk-server-pro/issues/261
+                18, // https://github.com/rustdesk/teamdesk-server-pro/issues/261
             fontWeight: FontWeight.bold,
           ),
         )).paddingOnly(bottom: 8),
@@ -3952,7 +3952,7 @@ get defaultOptionAccessMode => isCustomClient ? 'custom' : '';
 get defaultOptionApproveMode => isCustomClient ? 'password-click' : '';
 
 bool whitelistNotEmpty() {
-  // https://rustdesk.com/docs/en/self-host/client-configuration/advanced-settings/#whitelist
+  // https://teamdesk.com/docs/en/self-host/client-configuration/advanced-settings/#whitelist
   final v = bind.mainGetOptionSync(key: kOptionWhitelist);
   return v != '' && v != ',';
 }
@@ -3965,8 +3965,8 @@ bool whitelistNotEmpty() {
 // When we drag the blank tab bar (not the tab), the window will be dragged normally by adding the `onPanStart` handle.
 //
 // See the following code for more details:
-// https://github.com/rustdesk/rustdesk/blob/ce1dac3b8613596b4d8ae981275f9335489eb935/flutter/lib/desktop/widgets/tabbar_widget.dart#L385
-// https://github.com/rustdesk/rustdesk/blob/ce1dac3b8613596b4d8ae981275f9335489eb935/flutter/lib/desktop/widgets/tabbar_widget.dart#L399
+// https://github.com/rustdesk/teamdesk/blob/ce1dac3b8613596b4d8ae981275f9335489eb935/flutter/lib/desktop/widgets/tabbar_widget.dart#L385
+// https://github.com/rustdesk/teamdesk/blob/ce1dac3b8613596b4d8ae981275f9335489eb935/flutter/lib/desktop/widgets/tabbar_widget.dart#L399
 //
 // @platforms macos
 disableWindowMovable(int? windowId) {
@@ -4168,7 +4168,7 @@ String getConnectionText(bool secure, bool direct, String streamType) {
 
 String decode_http_response(http.Response resp) {
   try {
-    // https://github.com/rustdesk/rustdesk-server-pro/discussions/758
+    // https://github.com/rustdesk/teamdesk-server-pro/discussions/758
     return utf8.decode(resp.bodyBytes, allowMalformed: true);
   } catch (e) {
     debugPrint('Failed to decode response as UTF-8: $e');

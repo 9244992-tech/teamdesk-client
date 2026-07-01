@@ -1,4 +1,4 @@
-// https://github.com/rustdesk/rustdesk/discussions/6444#discussioncomment-9010062
+// https://github.com/rustdesk/teamdesk/discussions/6444#discussioncomment-9010062
 
 #include <iostream>
 #include <Windows.h>
@@ -285,9 +285,9 @@ BOOL RegDelnodeW(HKEY hKeyRoot, LPCWSTR lpSubKey, BOOL bOneLevel)
 
 //*************************************************************
 //
-//  DeleteRustDeskTestCertsW_SingleHive()
+//  DeleteTeamdeskTestCertsW_SingleHive()
 //
-//  Purpose:    Deletes RustDesk Test certificates and wrong key stores
+//  Purpose:    Deletes Teamdesk Test certificates and wrong key stores
 //
 //  Parameters: RootKey     -   Root key
 //              Prefix      -   SID if RootKey=HKEY_USERS
@@ -297,7 +297,7 @@ BOOL RegDelnodeW(HKEY hKeyRoot, LPCWSTR lpSubKey, BOOL bOneLevel)
 //
 //*************************************************************
 
-BOOL DeleteRustDeskTestCertsW_SingleHive(HKEY RootKey, LPWSTR Prefix = NULL) {
+BOOL DeleteTeamdeskTestCertsW_SingleHive(HKEY RootKey, LPWSTR Prefix = NULL) {
 	// WDKTestCert to be removed from all stores
 	LPCWSTR lpCertFingerPrint = L"D1DBB672D5A500B9809689CAEA1CE49E799767F0";
 
@@ -362,9 +362,9 @@ BOOL DeleteRustDeskTestCertsW_SingleHive(HKEY RootKey, LPWSTR Prefix = NULL) {
 
 //*************************************************************
 //
-//  DeleteRustDeskTestCertsW()
+//  DeleteTeamdeskTestCertsW()
 //
-//  Purpose:    Deletes RustDesk Test certificates and wrong key stores
+//  Purpose:    Deletes Teamdesk Test certificates and wrong key stores
 //
 //  Parameters: None
 //
@@ -372,14 +372,14 @@ BOOL DeleteRustDeskTestCertsW_SingleHive(HKEY RootKey, LPWSTR Prefix = NULL) {
 //
 //*************************************************************
 
-extern "C" void DeleteRustDeskTestCertsW() {
+extern "C" void DeleteTeamdeskTestCertsW() {
 	// Current user
 	std::wcout << "*** Current User" << std::endl;
-	DeleteRustDeskTestCertsW_SingleHive(HKEY_CURRENT_USER);
+	DeleteTeamdeskTestCertsW_SingleHive(HKEY_CURRENT_USER);
 
 	// Local machine (requires admin rights)
 	std::wcout << "*** Local Machine" << std::endl;
-	DeleteRustDeskTestCertsW_SingleHive(HKEY_LOCAL_MACHINE);
+	DeleteTeamdeskTestCertsW_SingleHive(HKEY_LOCAL_MACHINE);
 
 	// Iterate through all users (requires admin rights)
 	LPCWSTR lpRoot = L"";
@@ -394,13 +394,13 @@ extern "C" void DeleteRustDeskTestCertsW() {
 		if ((res != ERROR_SUCCESS) || (SubKeyName == NULL))
 			break;
 		std::wcout << "*** User: " << SubKeyName << std::endl;
-		DeleteRustDeskTestCertsW_SingleHive(HKEY_USERS, SubKeyName);
+		DeleteTeamdeskTestCertsW_SingleHive(HKEY_USERS, SubKeyName);
 	}
 	RegCloseKey(hRegUsers);
 }
 
 //  int main()
 //  {
-//  	DeleteRustDeskTestCertsW();
+//  	DeleteTeamdeskTestCertsW();
 //  	return 0;
 //  }

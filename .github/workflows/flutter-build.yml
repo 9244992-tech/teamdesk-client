@@ -1,4 +1,4 @@
-name: Build the flutter version of the RustDesk
+name: Build the flutter version of the Teamdesk
 
 on:
   workflow_call:
@@ -14,11 +14,11 @@ on:
 # variables from this workflow!
 #
 # It does NOT read build steps, however, so please fix 'flutter/build_fdroid.sh
-# whenever you add changes to Android CI build action ('build-rustdesk-android')
+# whenever you add changes to Android CI build action ('build-teamdesk-android')
 # in this file!
 
 env:
-  SCITER_RUST_VERSION: "1.75" # https://github.com/rustdesk/rustdesk/discussions/7503, also 1.78 has ABI change which causes our sciter version not working, https://blog.rust-lang.org/2024/03/30/i128-layout-update.html
+  SCITER_RUST_VERSION: "1.75" # https://github.com/rustdesk/teamdesk/discussions/7503, also 1.78 has ABI change which causes our sciter version not working, https://blog.rust-lang.org/2024/03/30/i128-layout-update.html
   RUST_VERSION: "1.75" # sciter failed on m1 with 1.78 because of https://blog.rust-lang.org/2024/03/30/i128-layout-update.html
   MAC_RUST_VERSION: "1.81" # 1.81 is requred for macos, because of https://github.com/yury/cidre requires 1.81
   CARGO_NDK_VERSION: "3.1.2"
@@ -30,7 +30,7 @@ env:
   # Windows arm64 only: the first stable Flutter to ship a native arm64 Windows Dart SDK +
   # engine is 3.44. Every other platform stays on FLUTTER_VERSION (3.24.5) until Windows 7
   # support is restored after the upstream-wide Flutter bump. The arm64 job patches the few
-  # 3.44-only source/pubspec changes on the fly (see "Patch RustDesk sources for Flutter 3.44").
+  # 3.44-only source/pubspec changes on the fly (see "Patch Teamdesk sources for Flutter 3.44").
   FLUTTER_WINDOWS_ARM_VERSION: "3.44.0"
   # for arm64 linux because official Dart SDK does not work
   FLUTTER_ELINUX_VERSION: "3.16.9"
@@ -40,7 +40,7 @@ env:
   # If we change the `VCPKG COMMIT_ID`, please remember:
   # 1. Call `$VCPKG_ROOT/vcpkg x-update-baseline` to update the baseline in `vcpkg.json`.
   #  Or we may face build issue like 
-  #  https://github.com/rustdesk/rustdesk/actions/runs/14414119794/job/40427970174
+  #  https://github.com/rustdesk/teamdesk/actions/runs/14414119794/job/40427970174
   # 2. Update the `VCPKG_COMMIT_ID` in `ci.yml` and `playground.yml`.
   VCPKG_COMMIT_ID: "120deac3062162151622ca4860575a33844ba10b"
   ARMV7_VCPKG_COMMIT_ID: "6f29f12e82a8293156836ad81cc9bf5af41fe836" # 2025.01.13, got "/opt/artifacts/vcpkg/vcpkg: No such file or directory" with latest version
@@ -163,9 +163,9 @@ jobs:
           }
 
       # https://github.com/flutter/flutter/issues/155685
-      # x64 only: arm64 uses the stock native arm64 Windows engine, and the rustdesk/engine
+      # x64 only: arm64 uses the stock native arm64 Windows engine, and the teamdesk/engine
       # windows-x64-release.zip is built for the 3.24-era x64 engine (matches FLUTTER_VERSION).
-      - name: Replace engine with rustdesk custom flutter engine
+      - name: Replace engine with teamdesk custom flutter engine
         if: ${{ matrix.job.arch == 'x86_64' }}
         run: |
           flutter doctor -v
@@ -184,7 +184,7 @@ jobs:
           cd $(dirname $(dirname $(which flutter)))
           [[ "3.24.5" == ${{env.FLUTTER_VERSION}} ]] && git apply flutter_3.24.4_dropdown_menu_enableFilter.diff
 
-      - name: Patch RustDesk sources for Flutter 3.44 (arm64)
+      - name: Patch Teamdesk sources for Flutter 3.44 (arm64)
         # arm64 is the only target on Flutter 3.44; apply its source/pubspec deltas on the fly
         # (shared with the 3.44 bridge job) so the committed sources stay on Flutter 3.24.5.
         # `flutter build` then runs `pub get`, regenerating pubspec.lock for the bumped deps.
@@ -237,21 +237,21 @@ jobs:
         shell: bash
         run: echo "SODIUM_LIB_DIR=$VCPKG_ROOT/installed/${{ matrix.job.vcpkg-triplet }}/lib" >> "$GITHUB_ENV"
 
-      - name: Build rustdesk
+      - name: Build teamdesk
         run: |
-          # Windows: build RustDesk
+          # Windows: build Teamdesk
           # --hwcodec is shared by all Windows targets; per-target extras (e.g. --vram) come from the matrix
           python3 .\build.py --portable --flutter --skip-portable-pack --hwcodec ${{ matrix.job.build-args }}
-          mv ./flutter/build/windows/${{ matrix.job.flutter-arch }}/runner/Release ./rustdesk
+          mv ./flutter/build/windows/${{ matrix.job.flutter-arch }}/runner/Release ./teamdesk
 
-          # Download usbmmidd_v2.zip and extract it to ./rustdesk
+          # Download usbmmidd_v2.zip and extract it to ./teamdesk
           Invoke-WebRequest -Uri https://github.com/rustdesk-org/rdev/releases/download/usbmmidd_v2/usbmmidd_v2.zip -OutFile usbmmidd_v2.zip
           Expand-Archive usbmmidd_v2.zip -DestinationPath .
           Remove-Item -Path usbmmidd_v2\Win32 -Recurse
           Remove-Item -Path "usbmmidd_v2\deviceinstaller64.exe", "usbmmidd_v2\deviceinstaller.exe", "usbmmidd_v2\usbmmidd.bat"
-          mv -Force .\usbmmidd_v2 ./rustdesk
+          mv -Force .\usbmmidd_v2 ./teamdesk
 
-          # Download printer driver files and extract them to ./rustdesk
+          # Download printer driver files and extract them to ./teamdesk
           try {
             Invoke-WebRequest -Uri https://github.com/rustdesk/hbb_common/releases/download/driver/rustdesk_printer_driver_v4-1.4.zip -OutFile rustdesk_printer_driver_v4-1.4.zip
             Invoke-WebRequest -Uri https://github.com/rustdesk/hbb_common/releases/download/driver/printer_driver_adapter.zip -OutFile printer_driver_adapter.zip
@@ -265,10 +265,10 @@ jobs:
             if ($checksum_driver -eq $downloadsum_driver.Hash -and $checksum_adapter -eq $downloadsum_adapter.Hash) {
                 Write-Output "rustdesk_printer_driver_v4-1.4, checksums match, extract the file."
                 Expand-Archive rustdesk_printer_driver_v4-1.4.zip -DestinationPath .
-                mkdir ./rustdesk/drivers
-                mv -Force .\rustdesk_printer_driver_v4-1.4 ./rustdesk/drivers/RustDeskPrinterDriver
+                mkdir ./teamdesk/drivers
+                mv -Force .\rustdesk_printer_driver_v4-1.4 ./teamdesk/drivers/TeamdeskPrinterDriver
                 Expand-Archive printer_driver_adapter.zip -DestinationPath .
-                mv -Force .\printer_driver_adapter.dll ./rustdesk
+                mv -Force .\printer_driver_adapter.dll ./teamdesk
             } elseif ($checksum_driver -ne $downloadsum_driver.Hash) {
                 Write-Output "rustdesk_printer_driver_v4-1.4, checksums do not match, ignore the file."
             } else {
@@ -299,21 +299,21 @@ jobs:
         if: ${{ inputs.upload-artifact }}
         with:
           name: ${{ matrix.job.arch == 'aarch64' && 'topmostwindow-artifacts-ARM64' || 'topmostwindow-artifacts-x64' }}
-          path: "./rustdesk"
+          path: "./teamdesk"
 
       - name: Upload unsigned
         if: env.UPLOAD_ARTIFACT == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: rustdesk-unsigned-windows-${{ matrix.job.arch }}
-          path: rustdesk
+          name: teamdesk-unsigned-windows-${{ matrix.job.arch }}
+          path: teamdesk
 
-      - name: Sign rustdesk files
+      - name: Sign teamdesk files
         if: env.UPLOAD_ARTIFACT == 'true' && env.SIGN_BASE_URL != '-2'
         shell: bash
         run: |
           pip3 install requests argparse
-          BASE_URL=${{ env.SIGN_BASE_URL }} SECRET_KEY=${{ secrets.SIGN_SECRET_KEY }} python3 res/job.py sign_files ./rustdesk/
+          BASE_URL=${{ env.SIGN_BASE_URL }} SECRET_KEY=${{ secrets.SIGN_SECRET_KEY }} python3 res/job.py sign_files ./teamdesk/
 
       - name: Build self-extracted executable
         shell: bash
@@ -322,10 +322,10 @@ jobs:
           sed -i '/dpiAware/d' res/manifest.xml
           pushd ./libs/portable
           pip3 install -r requirements.txt
-          python3 ./generate.py -f ../../rustdesk/ -o . -e ../../rustdesk/rustdesk.exe
+          python3 ./generate.py -f ../../teamdesk/ -o . -e ../../teamdesk/teamdesk.exe
           popd
           mkdir -p ./SignOutput
-          mv ./target/release/rustdesk-portable-packer.exe ./SignOutput/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.exe
+          mv ./target/release/teamdesk-portable-packer.exe ./SignOutput/teamdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.exe
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2
@@ -337,15 +337,15 @@ jobs:
         if: env.UPLOAD_ARTIFACT == 'true'
         run: |
           pushd ./res/msi
-          python preprocess.py --arp -d ../../rustdesk
+          python preprocess.py --arp -d ../../teamdesk
           nuget restore msi.sln
           $msiPlatform = if ('${{ matrix.job.arch }}' -eq 'aarch64') { 'ARM64' } else { 'x64' }
           msbuild msi.sln -p:Configuration=Release -p:Platform=$msiPlatform /p:TargetVersion=Windows10
           $msi = Get-ChildItem ./Package/bin/*/Release/en-us/Package.msi | Select-Object -First 1
-          mv $msi.FullName ../../SignOutput/rustdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.msi
-          sha256sum ../../SignOutput/rustdesk-*.msi
+          mv $msi.FullName ../../SignOutput/teamdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.msi
+          sha256sum ../../SignOutput/teamdesk-*.msi
 
-      - name: Sign rustdesk self-extracted file
+      - name: Sign teamdesk self-extracted file
         if: env.UPLOAD_ARTIFACT == 'true' && env.SIGN_BASE_URL != '-2'
         shell: bash
         run: |
@@ -358,6 +358,6 @@ jobs:
           prerelease: true
           tag_name: ${{ env.TAG_NAME }}
           files: |
-            ./SignOutput/rustdesk-*.msi
-            ./SignOutput/rustdesk-*.exe
+            ./SignOutput/teamdesk-*.msi
+            ./SignOutput/teamdesk-*.exe
 

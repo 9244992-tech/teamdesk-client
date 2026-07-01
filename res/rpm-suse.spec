@@ -1,4 +1,4 @@
-Name:       rustdesk
+Name:       teamdesk
 Version:    1.1.9
 Release:    0
 Summary:    RPM package
@@ -21,26 +21,26 @@ The best open-source remote desktop client software, written in Rust.
 
 %install
 mkdir -p %{buildroot}/usr/bin/
-mkdir -p %{buildroot}/usr/share/rustdesk/
-mkdir -p %{buildroot}/usr/share/rustdesk/files/
+mkdir -p %{buildroot}/usr/share/teamdesk/
+mkdir -p %{buildroot}/usr/share/teamdesk/files/
 mkdir -p %{buildroot}/usr/share/icons/hicolor/256x256/apps/
 mkdir -p %{buildroot}/usr/share/icons/hicolor/scalable/apps/
-install -m 755 $HBB/target/release/rustdesk %{buildroot}/usr/bin/rustdesk
-install $HBB/libsciter-gtk.so %{buildroot}/usr/share/rustdesk/libsciter-gtk.so
-install $HBB/res/rustdesk.service %{buildroot}/usr/share/rustdesk/files/
-install $HBB/res/128x128@2x.png %{buildroot}/usr/share/icons/hicolor/256x256/apps/rustdesk.png
-install $HBB/res/scalable.svg %{buildroot}/usr/share/icons/hicolor/scalable/apps/rustdesk.svg
-install $HBB/res/rustdesk.desktop %{buildroot}/usr/share/rustdesk/files/
-install $HBB/res/rustdesk-link.desktop %{buildroot}/usr/share/rustdesk/files/
+install -m 755 $HBB/target/release/teamdesk %{buildroot}/usr/bin/teamdesk
+install $HBB/libsciter-gtk.so %{buildroot}/usr/share/teamdesk/libsciter-gtk.so
+install $HBB/res/teamdesk.service %{buildroot}/usr/share/teamdesk/files/
+install $HBB/res/128x128@2x.png %{buildroot}/usr/share/icons/hicolor/256x256/apps/teamdesk.png
+install $HBB/res/scalable.svg %{buildroot}/usr/share/icons/hicolor/scalable/apps/teamdesk.svg
+install $HBB/res/teamdesk.desktop %{buildroot}/usr/share/teamdesk/files/
+install $HBB/res/teamdesk-link.desktop %{buildroot}/usr/share/teamdesk/files/
 
 %files
-/usr/bin/rustdesk
-/usr/share/rustdesk/libsciter-gtk.so
-/usr/share/rustdesk/files/rustdesk.service
-/usr/share/icons/hicolor/256x256/apps/rustdesk.png
-/usr/share/icons/hicolor/scalable/apps/rustdesk.svg
-/usr/share/rustdesk/files/rustdesk.desktop
-/usr/share/rustdesk/files/rustdesk-link.desktop
+/usr/bin/teamdesk
+/usr/share/teamdesk/libsciter-gtk.so
+/usr/share/teamdesk/files/teamdesk.service
+/usr/share/icons/hicolor/256x256/apps/teamdesk.png
+/usr/share/icons/hicolor/scalable/apps/teamdesk.svg
+/usr/share/teamdesk/files/teamdesk.desktop
+/usr/share/teamdesk/files/teamdesk-link.desktop
 
 %changelog
 # let's skip this for now
@@ -53,26 +53,26 @@ case "$1" in
   ;;
   2)
     # for upgrade
-    systemctl stop rustdesk || true
+    systemctl stop teamdesk || true
   ;;
 esac
 
 %post
-cp /usr/share/rustdesk/files/rustdesk.service /etc/systemd/system/rustdesk.service
-cp /usr/share/rustdesk/files/rustdesk.desktop /usr/share/applications/
-cp /usr/share/rustdesk/files/rustdesk-link.desktop /usr/share/applications/
+cp /usr/share/teamdesk/files/teamdesk.service /etc/systemd/system/teamdesk.service
+cp /usr/share/teamdesk/files/teamdesk.desktop /usr/share/applications/
+cp /usr/share/teamdesk/files/teamdesk-link.desktop /usr/share/applications/
 systemctl daemon-reload
-systemctl enable rustdesk
-systemctl start rustdesk
+systemctl enable teamdesk
+systemctl start teamdesk
 update-desktop-database
 
 %preun
 case "$1" in
   0)
     # for uninstall
-    systemctl stop rustdesk || true
-    systemctl disable rustdesk || true
-    rm /etc/systemd/system/rustdesk.service || true
+    systemctl stop teamdesk || true
+    systemctl disable teamdesk || true
+    rm /etc/systemd/system/teamdesk.service || true
   ;;
   1)
     # for upgrade
@@ -83,8 +83,8 @@ esac
 case "$1" in
   0)
     # for uninstall
-    rm /usr/share/applications/rustdesk.desktop || true
-    rm /usr/share/applications/rustdesk-link.desktop || true
+    rm /usr/share/applications/teamdesk.desktop || true
+    rm /usr/share/applications/teamdesk-link.desktop || true
     update-desktop-database
   ;;
   1)

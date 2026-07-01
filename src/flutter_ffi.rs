@@ -2853,12 +2853,12 @@ pub fn main_get_common(key: String) -> String {
                 crate::common::is_custom_client(),
             ) {
                 (Ok(true), false) => match crate::platform::windows::release_arch_suffix() {
-                    Some(arch) => format!("rustdesk-{_version}-{arch}.msi"),
+                    Some(arch) => format!("teamdesk-{_version}-{arch}.msi"),
                     None => "error:unsupported".to_owned(),
                 },
                 (Ok(true), true) | (Ok(false), _) => {
                     match crate::platform::windows::release_arch_suffix() {
-                        Some(arch) => format!("rustdesk-{_version}-{arch}.exe"),
+                        Some(arch) => format!("teamdesk-{_version}-{arch}.exe"),
                         None => "error:unsupported".to_owned(),
                     }
                 }
@@ -2870,9 +2870,9 @@ pub fn main_get_common(key: String) -> String {
             #[cfg(target_os = "macos")]
             {
                 return if cfg!(target_arch = "x86_64") {
-                    format!("rustdesk-{_version}-x86_64.dmg")
+                    format!("teamdesk-{_version}-x86_64.dmg")
                 } else if cfg!(target_arch = "aarch64") {
-                    format!("rustdesk-{_version}-aarch64.dmg")
+                    format!("teamdesk-{_version}-aarch64.dmg")
                 } else {
                     "error:unsupported".to_owned()
                 };

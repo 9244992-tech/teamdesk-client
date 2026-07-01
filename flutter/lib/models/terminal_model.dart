@@ -45,7 +45,7 @@ class TerminalModel with ChangeNotifier {
     // - Peer Linux: canonical-mode shells accept both, but raw-mode apps
     //   (readline, prompt_toolkit, vim, TUI frameworks) expect '\r'.
     // - Peer macOS: same as Linux, raw-mode apps expect '\r'
-    //   (https://github.com/rustdesk/rustdesk/issues/14907).
+    //   (https://github.com/rustdesk/teamdesk/issues/14907).
     // So on mobile / web-mobile, always normalize a lone '\n' to '\r'.
     // We deliberately do not touch multi-character payloads (e.g. pasted text)
     // so embedded newlines in pasted content are preserved.

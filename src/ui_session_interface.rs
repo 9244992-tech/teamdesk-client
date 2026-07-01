@@ -1070,7 +1070,7 @@ impl<T: InvokeUiSession> Session<T> {
         let platform_code: u32 = position_code as _;
         // For translate mode.
         // We need to set the platform code (keysym) if is AltGr.
-        // https://github.com/rustdesk/rustdesk/blob/07cf1b4db5ef2f925efd3b16b87c33ce03c94809/src/keyboard.rs#L1029
+        // https://github.com/rustdesk/teamdesk/blob/07cf1b4db5ef2f925efd3b16b87c33ce03c94809/src/keyboard.rs#L1029
         // https://github.com/flutter/flutter/issues/153811
         #[cfg(target_os = "linux")]
         let platform_code: u32 = position_code as _;
@@ -1658,7 +1658,7 @@ impl<T: InvokeUiSession> Session<T> {
 
     pub fn printer_response(&self, id: i32, path: String, printer_name: String) {
         self.printer_names.write().unwrap().insert(id, printer_name);
-        let to = std::env::temp_dir().join(format!("rustdesk_printer_{id}"));
+        let to = std::env::temp_dir().join(format!("teamdesk_printer_{id}"));
         self.send(Data::SendFiles((
             id,
             hbb_common::fs::JobType::Printer,
@@ -2010,7 +2010,7 @@ pub async fn io_loop<T: InvokeUiSession>(handler: Session<T>, round: u32) {
                 || handler.args[2].parse::<i32>().unwrap_or(0) <= 0
                 || port <= 0
             {
-                handler.on_error("Invalid arguments, usage:<br><br> rustdesk --port-forward remote-id listen-port remote-host remote-port");
+                handler.on_error("Invalid arguments, usage:<br><br> teamdesk --port-forward remote-id listen-port remote-host remote-port");
             }
             let remote_host = handler.args[1].clone();
             let remote_port = handler.args[2].parse::<i32>().unwrap_or(0);

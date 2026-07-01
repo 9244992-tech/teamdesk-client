@@ -97,16 +97,16 @@ lazy_static::lazy_static! {
     pub static ref APP_HOME_DIR: RwLock<String> = Default::default();
 }
 
-pub const LINK_DOCS_HOME: &str = "https://rustdesk.com/docs/en/";
-pub const LINK_DOCS_X11_REQUIRED: &str = "https://rustdesk.com/docs/en/manual/linux/#x11-required";
+pub const LINK_DOCS_HOME: &str = "https://teamdesk.com/docs/en/";
+pub const LINK_DOCS_X11_REQUIRED: &str = "https://teamdesk.com/docs/en/manual/linux/#x11-required";
 pub const LINK_HEADLESS_LINUX_SUPPORT: &str =
-    "https://github.com/rustdesk/rustdesk/wiki/Headless-Linux-Support";
+    "https://github.com/rustdesk/teamdesk/wiki/Headless-Linux-Support";
 
 lazy_static::lazy_static! {
     pub static ref HELPER_URL: HashMap<&'static str, &'static str> = HashMap::from([
-        ("rustdesk docs home", LINK_DOCS_HOME),
-        ("rustdesk docs x11-required", LINK_DOCS_X11_REQUIRED),
-        ("rustdesk x11 headless", LINK_HEADLESS_LINUX_SUPPORT),
+        ("teamdesk docs home", LINK_DOCS_HOME),
+        ("teamdesk docs x11-required", LINK_DOCS_X11_REQUIRED),
+        ("teamdesk x11 headless", LINK_HEADLESS_LINUX_SUPPORT),
         ]);
 }
 

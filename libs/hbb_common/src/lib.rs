@@ -332,7 +332,7 @@ pub fn get_uuid() -> Vec<u8> {
             static INIT: std::sync::Once = std::sync::Once::new();
             INIT.call_once(|| {
                 // Keep in sync with upstream handling:
-                // https://github.com/rustdesk/rustdesk/blob/85db6779828349b23ca3eba91cc7cd36c5337797/src/common.rs#L822
+                // https://github.com/rustdesk/teamdesk/blob/85db6779828349b23ca3eba91cc7cd36c5337797/src/common.rs#L822
                 let username = whoami::username().trim_end_matches('\0').to_owned();
                 let max_retries = if username == "root" { 16 } else { 8 };
                 for i in 0..max_retries {
@@ -489,11 +489,11 @@ pub struct VersionCheckResponse {
     pub url: String,
 }
 
-pub const VER_TYPE_RUSTDESK_CLIENT: &str = "rustdesk-client";
-pub const VER_TYPE_RUSTDESK_SERVER: &str = "rustdesk-server";
+pub const VER_TYPE_TEAMDESK_CLIENT: &str = "teamdesk-client";
+pub const VER_TYPE_TEAMDESK_SERVER: &str = "teamdesk-server";
 
 pub fn version_check_request(typ: String) -> (VersionCheckRequest, String) {
-    const URL: &str = "https://api.rustdesk.com/version/latest";
+    const URL: &str = "https://api.teamdesk.com/version/latest";
 
     use sysinfo::System;
     let system = System::new();

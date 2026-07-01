@@ -1,15 +1,15 @@
 [package]
-name = "rustdesk"
+name = "teamdesk"
 version = "1.4.8"
-authors = ["rustdesk <info@rustdesk.com>"]
+authors = ["teamdesk <info@teamdesk.com>"]
 edition = "2021"
 build= "build.rs"
-description = "RustDesk Remote Desktop"
-default-run = "rustdesk"
+description = "Teamdesk Remote Desktop"
+default-run = "teamdesk"
 rust-version = "1.75"
 
 [lib]
-name = "librustdesk"
+name = "libteamdesk"
 crate-type = ["cdylib", "staticlib", "rlib"]
 
 [[bin]]
@@ -85,7 +85,7 @@ kcp-sys= { git = "https://github.com/rustdesk-org/kcp-sys"}
 reqwest = { version = "0.12", features = ["blocking", "socks", "json", "native-tls", "rustls-tls", "rustls-tls-native-roots", "gzip"], default-features=false }
 
 [target.'cfg(not(target_os = "linux"))'.dependencies]
-# https://github.com/rustdesk/rustdesk/discussions/10197, not use cpal on linux
+# https://github.com/rustdesk/teamdesk/discussions/10197, not use cpal on linux
 cpal = { git = "https://github.com/rustdesk-org/cpal", branch = "osx-screencapturekit" }
 ringbuf = "0.3"
 
@@ -214,9 +214,9 @@ libxdo-sys = { path = "libs/libxdo-sys-stub" }
 
 [package.metadata.winres]
 LegalCopyright = "Copyright © 2026 Purslane Tech Pte. Ltd. All rights reserved."
-ProductName = "RustDesk"
-FileDescription = "RustDesk Remote Desktop"
-OriginalFilename = "rustdesk.exe"
+ProductName = "Teamdesk"
+FileDescription = "Teamdesk Remote Desktop"
+OriginalFilename = "teamdesk.exe"
 
 [target.'cfg(target_os="windows")'.build-dependencies]
 winres = "0.1"

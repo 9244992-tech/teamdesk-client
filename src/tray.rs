@@ -136,7 +136,7 @@ fn make_tray() -> hbb_common::ResultType<()> {
         );
 
         if let tao::event::Event::NewEvents(tao::event::StartCause::Init) = event {
-            // for fixing https://github.com/rustdesk/rustdesk/discussions/10210#discussioncomment-14600745
+            // for fixing https://github.com/rustdesk/teamdesk/discussions/10210#discussioncomment-14600745
             // so we start tray, but not to show it
             if crate::ui_interface::get_builtin_option(hbb_common::config::keys::OPTION_HIDE_TRAY) == "Y" {
                 return;
@@ -240,7 +240,7 @@ async fn start_query_session_count(sender: std::sync::mpsc::Sender<Data>) {
     let mut last_count = 0;
     loop {
         if let Ok(mut c) = crate::ipc::connect(1000, "").await {
-            let mut timer = crate::rustdesk_interval(tokio::time::interval(Duration::from_secs(1)));
+            let mut timer = crate::teamdesk_interval(tokio::time::interval(Duration::from_secs(1)));
             loop {
                 tokio::select! {
                     res = c.next() => {

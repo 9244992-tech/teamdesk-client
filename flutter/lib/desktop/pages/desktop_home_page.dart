@@ -433,11 +433,11 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     if (!bind.isCustomClient() &&
         updateUrl.isNotEmpty &&
         !isCardClosed &&
-        bind.mainUriPrefixSync().contains('rustdesk')) {
+        bind.mainUriPrefixSync().contains('teamdesk')) {
       final isToUpdate = (isWindows || isMacOS) && bind.mainIsInstalled();
       String btnText = isToUpdate ? 'Update' : 'Download';
       GestureTapCallback onPressed = () async {
-        final Uri url = Uri.parse('https://rustdesk.com/download');
+        final Uri url = Uri.parse('https://teamdesk.com/download');
         await launchUrl(url);
       };
       if (isToUpdate) {
@@ -453,7 +453,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           closeButton: true,
           help: isToUpdate ? 'Changelog' : null,
           link: isToUpdate
-              ? 'https://github.com/rustdesk/rustdesk/releases/tag/${bind.mainGetNewVersion()}'
+              ? 'https://github.com/rustdesk/teamdesk/releases/tag/${bind.mainGetNewVersion()}'
               : null);
     }
     if (systemError.isNotEmpty) {
@@ -465,14 +465,14 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         return buildInstallCard(
             "", bind.isOutgoingOnly() ? "" : "install_tip", "Install",
             () async {
-          await rustDeskWinManager.closeAllSubWindows();
+          await teamDeskWinManager.closeAllSubWindows();
           bind.mainGotoInstall();
         });
       } else if (bind.mainIsInstalledLowerVersion()) {
         return buildInstallCard(
             "Status", "Your installation is lower version.", "Click to upgrade",
             () async {
-          await rustDeskWinManager.closeAllSubWindows();
+          await teamDeskWinManager.closeAllSubWindows();
           bind.mainUpdateMe();
         });
       }
@@ -530,7 +530,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
             marginTop: LinuxCards.isEmpty ? 20.0 : 5.0,
             help: 'Help',
             link:
-                'https://rustdesk.com/docs/en/client/linux/#permissions-issue',
+                'https://teamdesk.com/docs/en/client/linux/#permissions-issue',
             closeButton: true,
             closeOption: keyShowSelinuxHelpTip,
           ));
@@ -541,13 +541,13 @@ class _DesktopHomePageState extends State<DesktopHomePage>
             "Warning", "wayland_experiment_tip", "", () async {},
             marginTop: LinuxCards.isEmpty ? 20.0 : 5.0,
             help: 'Help',
-            link: 'https://rustdesk.com/docs/en/client/linux/#x11-required'));
+            link: 'https://teamdesk.com/docs/en/client/linux/#x11-required'));
       } else if (bind.mainIsLoginWayland()) {
         LinuxCards.add(buildInstallCard("Warning",
             "Login screen using Wayland is not supported", "", () async {},
             marginTop: LinuxCards.isEmpty ? 20.0 : 5.0,
             help: 'Help',
-            link: 'https://rustdesk.com/docs/en/client/linux/#login-screen'));
+            link: 'https://teamdesk.com/docs/en/client/linux/#login-screen'));
       }
       if (LinuxCards.isNotEmpty) {
         return Column(
@@ -726,7 +726,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           watchIsInputMonitoring = false;
           // Do not notify for now.
           // Monitoring may not take effect until the process is restarted.
-          // rustDeskWinManager.call(
+          // teamDeskWinManager.call(
           //     WindowType.RemoteDesktop, kWindowDisableGrabKeyboard, '');
           setState(() {});
         }
@@ -747,7 +747,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       }
     });
     Get.put<RxBool>(svcStopped, tag: 'stop-service');
-    rustDeskWinManager.registerActiveWindowListener(onActiveWindowChanged);
+    teamDeskWinManager.registerActiveWindowListener(onActiveWindowChanged);
 
     screenToMap(window_size.Screen screen) => {
           'frame': {
@@ -773,7 +773,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       return false;
     }
 
-    rustDeskWinManager.setMethodHandler((call, fromWindowId) async {
+    teamDeskWinManager.setMethodHandler((call, fromWindowId) async {
       if (!isChattyMethod(call.method)) {
         debugPrint(
           "[Main] call ${call.method} with args ${call.arguments} from window $fromWindowId");
@@ -795,9 +795,9 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       } else if (call.method == kWindowActionRebuild) {
         reloadCurrentWindow();
       } else if (call.method == kWindowEventShow) {
-        await rustDeskWinManager.registerActiveWindow(call.arguments["id"]);
+        await teamDeskWinManager.registerActiveWindow(call.arguments["id"]);
       } else if (call.method == kWindowEventHide) {
-        await rustDeskWinManager.unregisterActiveWindow(call.arguments['id']);
+        await teamDeskWinManager.unregisterActiveWindow(call.arguments['id']);
       } else if (call.method == kWindowConnect) {
         await connectMainDesktop(
           call.arguments['id'],
@@ -829,7 +829,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           debugPrint("Failed to parse window type '${call.arguments}': $e");
         }
         if (windowId != null && windowType != null) {
-          await rustDeskWinManager.moveTabToNewWindow(
+          await teamDeskWinManager.moveTabToNewWindow(
               windowId, args[1], args[2], windowType);
         }
       } else if (call.method == kWindowEventOpenMonitorSession) {
@@ -840,13 +840,13 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         final displayCount = args['display_count'] as int;
         final windowType = args['window_type'] as int;
         final screenRect = parseParamScreenRect(args);
-        await rustDeskWinManager.openMonitorSession(
+        await teamDeskWinManager.openMonitorSession(
             windowId, peerId, display, displayCount, screenRect, windowType);
       } else if (call.method == kWindowEventRemoteWindowCoords) {
         final windowId = int.tryParse(call.arguments);
         if (windowId != null) {
           return jsonEncode(
-              await rustDeskWinManager.getOtherRemoteWindowCoords(windowId));
+              await teamDeskWinManager.getOtherRemoteWindowCoords(windowId));
         }
       }
     });
