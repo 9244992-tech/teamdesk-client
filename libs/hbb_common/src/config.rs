@@ -117,7 +117,7 @@ const CHARS: &[char] = &[
     'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 ];
 
-pub const RENDEZVOUS_SERVERS: &[&str] = &["92.51.23.167"];
+pub const RENDEZVOUS_SERVERS: &[&str] = &["rs.teamdesk.su"];
 pub const RS_PUB_KEY: &str = "AjwtbuHYADc6PK6QY8qmefel+UL0lKS33K0EEFexAFo=";
 
 pub const RENDEZVOUS_PORT: i32 = 21116;
