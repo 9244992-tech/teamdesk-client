@@ -11,9 +11,9 @@
 
 Babili kun ni: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/teamdesk) | [Reddit](https://www.reddit.com/r/teamdesk) | [YouTube](https://www.youtube.com/@teamdesk)
 
-[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Altnivela%20Funkcioj-blue)](https://teamdesk.com/pricing.html)
+[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Altnivela%20Funkcioj-blue)](https://teamdesk.su/pricing.html)
 
-Denove alia fora labortabla programo, skribita en Rust. Ĝi funkcias elskatole, ne bezonas konfiguraĵon. Vi havas la tutan kontrolon sur viaj datumoj, sen zorgo pri sekureco. Vi povas uzi nian servilon rendezvous/relajsan, [agordi vian propran](https://teamdesk.com/server), aŭ [skribi vian propran servilon rendezvous/relajsan](https://github.com/rustdesk/teamdesk-server-demo).
+Denove alia fora labortabla programo, skribita en Rust. Ĝi funkcias elskatole, ne bezonas konfiguraĵon. Vi havas la tutan kontrolon sur viaj datumoj, sen zorgo pri sekureco. Vi povas uzi nian servilon rendezvous/relajsan, [agordi vian propran](https://teamdesk.su/server), aŭ [skribi vian propran servilon rendezvous/relajsan](https://github.com/rustdesk/teamdesk-server-demo).
 
 Teamdesk bonvenigas kontribuon de ĉiuj. Vidu [`docs/CONTRIBUTING.md`](CONTRIBUTING.md) por helpo komenci.
 

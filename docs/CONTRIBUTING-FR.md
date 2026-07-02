@@ -38,7 +38,7 @@ issue.
 - Si votre correctif n'est pas examiné ou si vous avez besoin qu'une personne
   spécifique l'examine, vous pouvez @-mentionner un relecteur pour demander une
   revue dans la pull request ou un commentaire, ou vous pouvez demander une
-  revue par [e-mail](mailto:info@teamdesk.com).
+  revue par [e-mail](mailto:info@teamdesk.su).
 
 - Ajoutez des tests relatifs au bug corrigé ou à la nouvelle fonctionnalité.
 

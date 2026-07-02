@@ -8,7 +8,7 @@ encourageons tous les utilisateurs à nous signaler toute vulnérabilité qu'ils
 découvrent.
 
 Si vous trouvez une vulnérabilité de sécurité dans le projet Teamdesk, veuillez
-la signaler de manière responsable en envoyant un e-mail à info@teamdesk.com.
+la signaler de manière responsable en envoyant un e-mail à info@teamdesk.su.
 
 À ce stade, nous n'avons pas de programme de bug bounty. Nous sommes une petite
 équipe qui s'attaque à un grand défi. Nous vous encourageons vivement à signaler

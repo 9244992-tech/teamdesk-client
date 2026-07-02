@@ -493,7 +493,7 @@ pub const VER_TYPE_TEAMDESK_CLIENT: &str = "teamdesk-client";
 pub const VER_TYPE_TEAMDESK_SERVER: &str = "teamdesk-server";
 
 pub fn version_check_request(typ: String) -> (VersionCheckRequest, String) {
-    const URL: &str = "https://api.teamdesk.com/version/latest";
+    const URL: &str = "https://api.teamdesk.su/version/latest";
 
     use sysinfo::System;
     let system = System::new();

@@ -64,7 +64,7 @@ Vertreter bei einer Online- oder Präsenzveranstaltung.
 
 Fälle von missbräuchlichem, belästigendem oder anderweitig inakzeptablem Verhalten können
 den für die Durchsetzung zuständigen Community-Leitern 
-unter [info@teamdesk.com](mailto:info@teamdesk.com) gemeldet werden.
+unter [info@teamdesk.su](mailto:info@teamdesk.su) gemeldet werden.
 Jeder Fall wird umgehend und fair geprüft und untersucht.
 
 ## Richtlinien zur Geltendmachung 

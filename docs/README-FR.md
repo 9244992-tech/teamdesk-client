@@ -11,9 +11,9 @@
 
 Chattez avec nous : [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/teamdesk) | [Reddit](https://www.reddit.com/r/teamdesk) | [YouTube](https://www.youtube.com/@teamdesk)
 
-[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Fonctionnalit%C3%A9s%20Avanc%C3%A9es-blue)](https://teamdesk.com/pricing.html)
+[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Fonctionnalit%C3%A9s%20Avanc%C3%A9es-blue)](https://teamdesk.su/pricing.html)
 
-Encore un autre logiciel de bureau à distance, écrit en Rust. Fonctionne directement, aucune configuration n'est nécessaire. Vous avez le contrôle total de vos données, sans aucun souci de sécurité. Vous pouvez utiliser notre serveur de rendez-vous/relais, [configurer le vôtre](https://teamdesk.com/server), ou [écrire votre propre serveur de rendez-vous/relais](https://github.com/rustdesk/teamdesk-server-demo).
+Encore un autre logiciel de bureau à distance, écrit en Rust. Fonctionne directement, aucune configuration n'est nécessaire. Vous avez le contrôle total de vos données, sans aucun souci de sécurité. Vous pouvez utiliser notre serveur de rendez-vous/relais, [configurer le vôtre](https://teamdesk.su/server), ou [écrire votre propre serveur de rendez-vous/relais](https://github.com/rustdesk/teamdesk-server-demo).
 
 Teamdesk accueille les contributions de tout le monde. Voir [`docs/CONTRIBUTING.md`](CONTRIBUTING.md) pour plus d'informations.
 

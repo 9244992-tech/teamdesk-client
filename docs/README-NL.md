@@ -6,14 +6,14 @@
   <a href="#file-structure">Structuur</a> •
   <a href="#snapshot">Snapshot</a><br>
   [<a href="../README.md">English</a>] | [<a href="README-UA.md">Українська</a>] | [<a href="README-CS.md">česky</a>] | [<a href="README-ZH.md">中文</a>] | [<a href="README-HU.md">Magyar</a>] | [<a href="README-ES.md">Español</a>] | [<a href="README-FA.md">فارسی</a>] | [<a href="README-FR.md">Français</a>] | [<a href="README-DE.md">Deutsch</a>] | [<a href="README-PL.md">Polski</a>] | [<a href="README-ID.md">Indonesian</a>] | [<a href="README-FI.md">Suomi</a>] | [<a href="README-ML.md">മലയാളം</a>] | [<a href="README-JP.md">日本語</a>] | [<a href="README-IT.md">Italiano</a>] | [<a href="README-RU.md">Русский</a>] | [<a href="README-PTBR.md">Português (Brasil)</a>] | [<a href="README-EO.md">Esperanto</a>] | [<a href="README-KR.md">한국어</a>] | [<a href="README-AR.md">العربي</a>] | [<a href="README-VN.md">Tiếng Việt</a>] | [<a href="README-GR.md">Ελληνικά</a>]<br>
-  <b>Wij hebben uw hulp nodig om dit README bestand te vertalen, <a href="https://github.com/rustdesk/teamdesk/tree/master/src/lang">Teamdesk UI</a> en <a href="https://github.com/rustdesk/doc.teamdesk.com">Doc</a> naar uw moedertaal</b>
+  <b>Wij hebben uw hulp nodig om dit README bestand te vertalen, <a href="https://github.com/rustdesk/teamdesk/tree/master/src/lang">Teamdesk UI</a> en <a href="https://github.com/rustdesk/doc.teamdesk.su">Doc</a> naar uw moedertaal</b>
 </p>
 
 Chat met ons: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/teamdesk) | [Reddit](https://www.reddit.com/r/teamdesk) | [YouTube](https://www.youtube.com/@teamdesk)
 
-[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Geavanceerde%20Functies-blue)](https://teamdesk.com/pricing.html)
+[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Geavanceerde%20Functies-blue)](https://teamdesk.su/pricing.html)
 
-Alweer een andere programma voor -bureaublad op afstand-, geschreven in Rust. Werkt -out of the box-, geen configuratie nodig. U heeft volledige controle over uw gegevens, en hoeft zich geen zorgen te maken over de beveiliging. U kunt onze rendez-vous/relay server gebruiken, [je eigen server opzetten](https://teamdesk.com/blog/id-relay-set), of [je eigen rendez-vous/relay-server schrijven](https://github.com/rustdesk/teamdesk-server-demo).
+Alweer een andere programma voor -bureaublad op afstand-, geschreven in Rust. Werkt -out of the box-, geen configuratie nodig. U heeft volledige controle over uw gegevens, en hoeft zich geen zorgen te maken over de beveiliging. U kunt onze rendez-vous/relay server gebruiken, [je eigen server opzetten](https://teamdesk.su/blog/id-relay-set), of [je eigen rendez-vous/relay-server schrijven](https://github.com/rustdesk/teamdesk-server-demo).
 
 Teamdesk verwelkomt bijdragen van iedereen. Zie [`docs/CONTRIBUTING.md`](CONTRIBUTING.md) voor hulp om aan de slag te gaan.
 
@@ -48,7 +48,7 @@ Download zelf de dynamic library van Sciter.
 
 - Voer uit: `cargo run`
 
-## [Bouwen](https://teamdesk.com/docs/en/dev/build/)
+## [Bouwen](https://teamdesk.su/docs/en/dev/build/)
 
 ## Bouwen op Linux
 

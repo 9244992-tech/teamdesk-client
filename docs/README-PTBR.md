@@ -5,7 +5,7 @@
   <a href="#estrutura-de-arquivos">Estrutura</a> •
   <a href="#capturas-de-tela">Capturas de Tela</a><br>
   [<a href="../README.md">Inglês</a>] | [<a href="docs/README-UA.md">Ucraniano</a>] | [<a href="docs/README-CS.md">Tcheco</a>] | [<a href="docs/README-ZH.md">Chinês</a>] | [<a href="docs/README-HU.md">Húngaro</a>] | [<a href="docs/README-ES.md">Espanhol</a>] | [<a href="docs/README-FA.md">Persa</a>] | [<a href="docs/README-FR.md">Francês</a>] | [<a href="docs/README-DE.md">Alemão</a>] | [<a href="docs/README-PL.md">Polonês</a>] | [<a href="docs/README-ID.md">Indonésio</a>] | [<a href="docs/README-FI.md">Finlandês</a>] | [<a href="docs/README-ML.md">Malaiala</a>] | [<a href="docs/README-JP.md">Japonês</a>] | [<a href="docs/README-NL.md">Holandês</a>] | [<a href="docs/README-IT.md">Italiano</a>] | [<a href="docs/README-RU.md">Russo</a>] | [<a href="docs/README-EO.md">Esperanto</a>] | [<a href="docs/README-KR.md">Coreano</a>] | [<a href="docs/README-AR.md">Árabe</a>] | [<a href="docs/README-VN.md">Vietnamita</a>] | [<a href="docs/README-DA.md">Dinamarquês</a>] | [<a href="docs/README-GR.md">Grego</a>] | [<a href="docs/README-TR.md">Turco</a>] | [<a href="docs/README-NO.md">Norueguês</a>] | [<a href="docs/README-RO.md">Romeno</a>]<br>
-  <b>Precisamos da sua ajuda para traduzir este README, a <a href="https://github.com/rustdesk/teamdesk/tree/master/src/lang">Interface do Teamdesk</a> e a <a href="https://github.com/rustdesk/doc.teamdesk.com">Documentação do Teamdesk</a> para o seu idioma nativo</b>
+  <b>Precisamos da sua ajuda para traduzir este README, a <a href="https://github.com/rustdesk/teamdesk/tree/master/src/lang">Interface do Teamdesk</a> e a <a href="https://github.com/rustdesk/doc.teamdesk.su">Documentação do Teamdesk</a> para o seu idioma nativo</b>
 </p>
 
 > [!Caution]
@@ -15,9 +15,9 @@
 
 Converse conosco: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/teamdesk) | [Reddit](https://www.reddit.com/r/teamdesk) | [YouTube](https://www.youtube.com/@teamdesk)
 
-[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Advanced%20Features-blue)](https://teamdesk.com/pricing.html)
+[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Advanced%20Features-blue)](https://teamdesk.su/pricing.html)
 
-Mais uma solução de desktop remoto, escrita em Rust. Funciona imediatamente, sem necessidade de configuração. Você tem controle total dos seus dados, sem preocupações com segurança. Você pode usar nosso servidor de conexão/retransmissão (rendezvous/relay), [configurar o seu próprio](https://teamdesk.com/server) ou [escrever seu próprio servidor de conexão/retransmissão](https://github.com/rustdesk/teamdesk-server-demo).
+Mais uma solução de desktop remoto, escrita em Rust. Funciona imediatamente, sem necessidade de configuração. Você tem controle total dos seus dados, sem preocupações com segurança. Você pode usar nosso servidor de conexão/retransmissão (rendezvous/relay), [configurar o seu próprio](https://teamdesk.su/server) ou [escrever seu próprio servidor de conexão/retransmissão](https://github.com/rustdesk/teamdesk-server-demo).
 
 ![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png)
 
@@ -57,7 +57,7 @@ Por favor, faça o download da biblioteca dinâmica do Sciter por conta própria
 
 - Execute `cargo run`
 
-## [Compilar](https://teamdesk.com/docs/en/dev/build/)
+## [Compilar](https://teamdesk.su/docs/en/dev/build/)
 
 ## Como Compilar no Linux
 

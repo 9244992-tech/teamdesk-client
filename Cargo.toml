@@ -1,7 +1,7 @@
 [package]
 name = "teamdesk"
 version = "1.4.8"
-authors = ["teamdesk <info@teamdesk.com>"]
+authors = ["teamdesk <info@teamdesk.su>"]
 edition = "2021"
 build= "build.rs"
 description = "Teamdesk Remote Desktop"

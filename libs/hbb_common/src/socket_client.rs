@@ -291,10 +291,10 @@ mod tests {
             "1.1.1.1.nip.io:8080"
         );
         assert_eq!(
-            ipv4_to_ipv6("teamdesk.com".to_owned(), false),
-            "teamdesk.com"
+            ipv4_to_ipv6("teamdesk.su".to_owned(), false),
+            "teamdesk.su"
         );
-        if ("teamdesk.com:80")
+        if ("teamdesk.su:80")
             .to_socket_addrs()
             .unwrap()
             .next()

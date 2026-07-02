@@ -31,7 +31,7 @@ Dette er for å hindre duplikat innsats på samme problem.
 
 - Hvis dine endringer ikke blir sett eller hvis du trenger en spesefik person til
   å se på dem kan du @-svare en med autoritet til å godkjenne dine endringer.
-  Dette kann gjøres i en pull request, en kommentar eller via epost på [email](mailto:info@teamdesk.com).
+  Dette kann gjøres i en pull request, en kommentar eller via epost på [email](mailto:info@teamdesk.su).
 
 - Legg til tester relevant til en fikset bug eller en ny tilgjengelighet.
 

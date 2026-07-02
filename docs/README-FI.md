@@ -11,9 +11,9 @@
 
 Juttele meidän kanssa: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/teamdesk) | [Reddit](https://www.reddit.com/r/teamdesk) | [YouTube](https://www.youtube.com/@teamdesk)
 
-[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Edistyneet%20Ominaisuudet-blue)](https://teamdesk.com/pricing.html)
+[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Edistyneet%20Ominaisuudet-blue)](https://teamdesk.su/pricing.html)
 
-Vielä yksi etätyöpöytäohjelmisto, ohjelmoitu Rust-kielellä. Toimii suoraan pakkauksesta, ei tarvitse asetusta. Hallitset täysin tietojasi, ei tarvitse murehtia turvallisuutta. Voit käyttää meidän rendezvous/relay-palvelinta, [aseta omasi](https://teamdesk.com/server), tai [kirjoittaa oma rendezvous/relay-palvelin](https://github.com/rustdesk/teamdesk-server-demo).
+Vielä yksi etätyöpöytäohjelmisto, ohjelmoitu Rust-kielellä. Toimii suoraan pakkauksesta, ei tarvitse asetusta. Hallitset täysin tietojasi, ei tarvitse murehtia turvallisuutta. Voit käyttää meidän rendezvous/relay-palvelinta, [aseta omasi](https://teamdesk.su/server), tai [kirjoittaa oma rendezvous/relay-palvelin](https://github.com/rustdesk/teamdesk-server-demo).
 
 Teamdesk toivottaa avustukset tervetulleiksi kaikilta. Katso lisätietoja [`docs/CONTRIBUTING.md`](CONTRIBUTING.md) avun saamiseksi.
 

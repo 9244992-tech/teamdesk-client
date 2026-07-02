@@ -11,11 +11,11 @@
 
 Porozmawiaj z nami na: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/teamdesk) | [Reddit](https://www.reddit.com/r/teamdesk) | [YouTube](https://www.youtube.com/@teamdesk)
 
-[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Zaawansowane%20Funkcje-blue)](https://teamdesk.com/pricing.html)
+[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-Zaawansowane%20Funkcje-blue)](https://teamdesk.su/pricing.html)
 
 ## O projekcie
 
-Teamdesk to wieloplatformowe oprogramowanie do zdalnego pulpitu, napisane w języku Rust, zaprojektowane z myślą o prostocie wdrożenia, bezpieczeństwie i pełnej kontroli użytkownika nad danymi. Aplikacja działa od razu po uruchomieniu i nie wymaga skomplikowanej konfiguracji. Możesz skorzystać z naszego darmowego serwera publicznego, [skonfigurować własny](https://teamdesk.com/server), lub [napisać własny serwer](https://github.com/rustdesk/teamdesk-server-demo).
+Teamdesk to wieloplatformowe oprogramowanie do zdalnego pulpitu, napisane w języku Rust, zaprojektowane z myślą o prostocie wdrożenia, bezpieczeństwie i pełnej kontroli użytkownika nad danymi. Aplikacja działa od razu po uruchomieniu i nie wymaga skomplikowanej konfiguracji. Możesz skorzystać z naszego darmowego serwera publicznego, [skonfigurować własny](https://teamdesk.su/server), lub [napisać własny serwer](https://github.com/rustdesk/teamdesk-server-demo).
 
 ![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png) 
 

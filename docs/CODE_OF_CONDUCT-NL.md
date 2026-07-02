@@ -61,7 +61,7 @@ optreden als aangewezen vertegenwoordiger bij een online of offline evenement.
 
 Gevallen van beledigend, intimiderend of anderszins onaanvaardbaar gedrag kunnen 
 worden gemeld aan de gemeenschapsleiders die verantwoordelijk zijn voor de 
-handhaving op [info@teamdesk.com](mailto:info@teamdesk.com).
+handhaving op [info@teamdesk.su](mailto:info@teamdesk.su).
 Alle klachten zullen snel en eerlijk worden onderzocht.
 
 Alle leiders van de gemeenschap zijn verplicht de privacy en de veiligheid van 

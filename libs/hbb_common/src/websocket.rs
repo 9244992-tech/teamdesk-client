@@ -417,14 +417,14 @@ mod tests {
         assert_eq!(check_ws("127.0.0.1:21115"), "ws://127.0.0.1:21118");
         assert_eq!(check_ws("127.0.0.1:21116"), "ws://127.0.0.1:21118");
         assert_eq!(check_ws("127.0.0.1:21117"), "ws://127.0.0.1:21119");
-        assert_eq!(check_ws("teamdesk.com:21115"), "ws://teamdesk.com/ws/id");
-        assert_eq!(check_ws("teamdesk.com:21116"), "ws://teamdesk.com/ws/id");
-        assert_eq!(check_ws("teamdesk.com:21117"), "ws://teamdesk.com/ws/relay");
+        assert_eq!(check_ws("teamdesk.su:21115"), "ws://teamdesk.su/ws/id");
+        assert_eq!(check_ws("teamdesk.su:21116"), "ws://teamdesk.su/ws/id");
+        assert_eq!(check_ws("teamdesk.su:21117"), "ws://teamdesk.su/ws/relay");
         // set relay-server without port
         Config::set_option("relay-server".to_string(), "127.0.0.1".to_string());
         Config::set_option(
             "api-server".to_string(),
-            "https://api.teamdesk.com".to_string(),
+            "https://api.teamdesk.su".to_string(),
         );
         assert_eq!(
             check_ws("[0:0:0:0:0:0:0:1]:21115"),
@@ -438,11 +438,11 @@ mod tests {
             check_ws("[0:0:0:0:0:0:0:1]:21117"),
             "ws://[0:0:0:0:0:0:0:1]:21119"
         );
-        assert_eq!(check_ws("teamdesk.com:21115"), "wss://teamdesk.com/ws/id");
-        assert_eq!(check_ws("teamdesk.com:21116"), "wss://teamdesk.com/ws/id");
+        assert_eq!(check_ws("teamdesk.su:21115"), "wss://teamdesk.su/ws/id");
+        assert_eq!(check_ws("teamdesk.su:21116"), "wss://teamdesk.su/ws/id");
         assert_eq!(
-            check_ws("teamdesk.com:21117"),
-            "wss://teamdesk.com/ws/relay"
+            check_ws("teamdesk.su:21117"),
+            "wss://teamdesk.su/ws/relay"
         );
         // set relay-server with default port
         Config::set_option("relay-server".to_string(), "127.0.0.1:21117".to_string());
@@ -451,11 +451,11 @@ mod tests {
         assert_eq!(check_ws("127.0.0.1:21117"), "ws://127.0.0.1:21119");
         // set relay-server with custom port
         Config::set_option("relay-server".to_string(), "127.0.0.1:34567".to_string());
-        assert_eq!(check_ws("teamdesk.com:21115"), "wss://teamdesk.com/ws/id");
-        assert_eq!(check_ws("teamdesk.com:21116"), "wss://teamdesk.com/ws/id");
+        assert_eq!(check_ws("teamdesk.su:21115"), "wss://teamdesk.su/ws/id");
+        assert_eq!(check_ws("teamdesk.su:21116"), "wss://teamdesk.su/ws/id");
         assert_eq!(
-            check_ws("teamdesk.com:34567"),
-            "wss://teamdesk.com/ws/relay"
+            check_ws("teamdesk.su:34567"),
+            "wss://teamdesk.su/ws/relay"
         );
 
         // set custom-rendezvous-server without port

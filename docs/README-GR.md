@@ -6,14 +6,14 @@
   <a href="#Δομή-φακέλων">Δομή</a> •
   <a href="#Στιγμιότυπα">Στιγμιότυπα</a><br>
   [<a href="../README.md">English</a>] | [<a href="README-UA.md">Українська</a>] | [<a href="README-CS.md">česky</a>] | [<a href="README-ZH.md">中文</a>] | | [<a href="README-HU.md">Magyar</a>] | [<a href="README-ES.md">Español</a>] | [<a href="README-FA.md">فارسی</a>] | [<a href="README-FR.md">Français</a>] | [<a href="README-DE.md">Deutsch</a>] | [<a href="README-PL.md">Polski</a>] | [<a href="README-ID.md">Indonesian</a>] | [<a href="README-FI.md">Suomi</a>] | [<a href="README-ML.md">മലയാളം</a>] | [<a href="README-JP.md">日本語</a>] | [<a href="README-NL.md">Nederlands</a>] | [<a href="README-IT.md">Italiano</a>] | [<a href="README-RU.md">Русский</a>] | [<a href="README-PTBR.md">Português (Brasil)</a>] | [<a href="README-EO.md">Esperanto</a>] | [<a href="README-KR.md">한국어</a>] | [<a href="README-AR.md">العربي</a>] | [<a href="README-VN.md">Tiếng Việt</a>] | [<a href="README-DA.md">Dansk</a>]<br>
-  <b>Χρειαζόμαστε τη βοήθειά σας για να μεταφράσουμε αυτό το αρχείο README, το <a href="https://github.com/rustdesk/teamdesk/tree/master/src/lang">Teamdesk UI</a> και το <a href="https://github.com/rustdesk/doc.teamdesk.com">Doc</a> στη μητρική σας γλώσσα</b>
+  <b>Χρειαζόμαστε τη βοήθειά σας για να μεταφράσουμε αυτό το αρχείο README, το <a href="https://github.com/rustdesk/teamdesk/tree/master/src/lang">Teamdesk UI</a> και το <a href="https://github.com/rustdesk/doc.teamdesk.su">Doc</a> στη μητρική σας γλώσσα</b>
 </p>
 
 Επικοινωνήστε μαζί μας μέσω: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/teamdesk) | [Reddit](https://www.reddit.com/r/teamdesk) | [YouTube](https://www.youtube.com/@teamdesk)
 
-[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-%CE%A0%CF%81%CE%BF%CE%B7%CE%B3%CE%BC%CE%AD%CE%BD%CE%B5%CF%82%20%CE%94%CF%85%CE%BD%CE%B1%CF%84%CF%8C%CF%84%CE%B7%CF%84%CE%B5%CF%82-blue)](https://teamdesk.com/pricing.html)
+[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-%CE%A0%CF%81%CE%BF%CE%B7%CE%B3%CE%BC%CE%AD%CE%BD%CE%B5%CF%82%20%CE%94%CF%85%CE%BD%CE%B1%CF%84%CF%8C%CF%84%CE%B7%CF%84%CE%B5%CF%82-blue)](https://teamdesk.su/pricing.html)
 
-Ένα λογισμικό απομακρυσμένης επιφάνειας εργασίας, γραμμένο σε γλώσσα Rust. Δεν χρειάζεται κάποια παραμετροποίηση, λειτουργεί αμέσως μετά την εγκατάσταση. Έχετε τον πλήρη έλεγχο των δεδομένων σας, χωρίς να ανησυχείτε για την ασφάλειά τους. Μπορείτε να χρησιμοποιήσετε τους προκαθορισμένους διακομιστές rendezvous/αναμετάδοσης, [να εγκαταστήσετε τον δικό σας διακομιστή](https://teamdesk.com/server), ή [να αναπτύξετε ένα δικό σας διακομιστή rendezvous/αναμετάδοσης](https://github.com/rustdesk/teamdesk-server-demo).
+Ένα λογισμικό απομακρυσμένης επιφάνειας εργασίας, γραμμένο σε γλώσσα Rust. Δεν χρειάζεται κάποια παραμετροποίηση, λειτουργεί αμέσως μετά την εγκατάσταση. Έχετε τον πλήρη έλεγχο των δεδομένων σας, χωρίς να ανησυχείτε για την ασφάλειά τους. Μπορείτε να χρησιμοποιήσετε τους προκαθορισμένους διακομιστές rendezvous/αναμετάδοσης, [να εγκαταστήσετε τον δικό σας διακομιστή](https://teamdesk.su/server), ή [να αναπτύξετε ένα δικό σας διακομιστή rendezvous/αναμετάδοσης](https://github.com/rustdesk/teamdesk-server-demo).
 
 ![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png)
 
@@ -50,7 +50,7 @@
 
 - Εκτελέστε `cargo run`
 
-## [Build](https://teamdesk.com/docs/en/dev/build/)
+## [Build](https://teamdesk.su/docs/en/dev/build/)
 
 ## Πως να το κάνετε build στο Linux
 

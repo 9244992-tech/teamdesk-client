@@ -54,7 +54,7 @@ utpekt representant på digitale og fysiske arrangsjemanger.
 
 Hendelser av misbruk, trakasserende eller på noen måte uakseptert oppførsel kann
 bli raportert til felleskapets ledere med ansvar for håndheving på
-[info@teamdesk.com](mailto:info@teamdesk.com).
+[info@teamdesk.su](mailto:info@teamdesk.su).
 All tilbakemelding vill bli sett gjennom og investigert rettferdig så fort som mulig.
 
 Alle felleskapets ledere er obligert til å respektere privatlivet og sikkerhetet ovenfor

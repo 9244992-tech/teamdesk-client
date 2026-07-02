@@ -187,9 +187,9 @@ class _InstallPageBodyState extends State<_InstallPageBody>
                           InkWell(
                             hoverColor: Colors.transparent,
                             onTap: () => launchUrlString(
-                                'https://teamdesk.com/privacy.html'),
+                                'https://teamdesk.su/privacy.html'),
                             child: Tooltip(
-                              message: 'https://teamdesk.com/privacy.html',
+                              message: 'https://teamdesk.su/privacy.html',
                               child: Row(children: [
                                 Icon(Icons.launch_outlined, size: 16)
                                     .marginOnly(right: 5),

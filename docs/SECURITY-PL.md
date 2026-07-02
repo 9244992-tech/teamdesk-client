@@ -3,7 +3,7 @@
 ## Zgłaszanie podatności
 
 Bardzo cenimy sobie bezpieczeństwo projektu. Zachęcamy wszystkich użytkowników do zgłaszania nam wszelkich wykrytych luk.
-Jeżeli znajdziesz lukę w projekcie Teamdesk, proszę zgłosić ją jak najszybciej wysyłając e-mail na adres info@teamdesk.com.
+Jeżeli znajdziesz lukę w projekcie Teamdesk, proszę zgłosić ją jak najszybciej wysyłając e-mail na adres info@teamdesk.su.
 
 W tym momencie, nie mamy uruchomionego programu nagradzania za wykryte błędy. Jesteśmy małym zespołem próbującym rozwiązywać duże problemy.
 Prosimy o odpowidzialne zgłaszanie wszelkich podatności w zabezpieczeniach, abyśmy mogli kontynuować tworzenie bezpiecznej aplikacji dla całej społeczności.

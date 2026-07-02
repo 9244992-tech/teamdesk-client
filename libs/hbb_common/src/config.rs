@@ -97,8 +97,8 @@ lazy_static::lazy_static! {
     pub static ref APP_HOME_DIR: RwLock<String> = Default::default();
 }
 
-pub const LINK_DOCS_HOME: &str = "https://teamdesk.com/docs/en/";
-pub const LINK_DOCS_X11_REQUIRED: &str = "https://teamdesk.com/docs/en/manual/linux/#x11-required";
+pub const LINK_DOCS_HOME: &str = "https://teamdesk.su/docs/en/";
+pub const LINK_DOCS_X11_REQUIRED: &str = "https://teamdesk.su/docs/en/manual/linux/#x11-required";
 pub const LINK_HEADLESS_LINUX_SUPPORT: &str =
     "https://github.com/rustdesk/teamdesk/wiki/Headless-Linux-Support";
 

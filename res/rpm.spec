@@ -3,8 +3,8 @@ Version:    1.4.8
 Release:    0
 Summary:    RPM package
 License:    GPL-3.0
-URL:        https://teamdesk.com
-Vendor:     teamdesk <info@teamdesk.com>
+URL:        https://teamdesk.su
+Vendor:     teamdesk <info@teamdesk.su>
 Requires:   gtk3 libxcb libXfixes alsa-lib libva2 pam gstreamer1-plugins-base
 Recommends: libayatana-appindicator-gtk3 libxdo
 

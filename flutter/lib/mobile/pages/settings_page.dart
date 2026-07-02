@@ -36,7 +36,7 @@ class SettingsPage extends StatefulWidget implements PageShape {
   State<SettingsPage> createState() => _SettingsState();
 }
 
-const url = 'https://teamdesk.com/';
+const url = 'https://teamdesk.su/';
 
 enum KeepScreenOn {
   never,
@@ -960,7 +960,7 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
                 title: Text(translate("Version: ") + version),
                 value: Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text('teamdesk.com',
+                  child: Text('teamdesk.su',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                       )),
@@ -985,7 +985,7 @@ class _SettingsState extends State<SettingsPage> with WidgetsBindingObserver {
             SettingsTile(
               title: Text(translate("Privacy Statement")),
               onPressed: (context) =>
-                  launchUrlString('https://teamdesk.com/privacy.html'),
+                  launchUrlString('https://teamdesk.su/privacy.html'),
               leading: Icon(Icons.privacy_tip),
             )
           ],
@@ -1098,12 +1098,12 @@ void showAbout(OverlayDialogManager dialogManager) {
         Text('Version: $version'),
         InkWell(
             onTap: () async {
-              const url = 'https://teamdesk.com/';
+              const url = 'https://teamdesk.su/';
               await launchUrl(Uri.parse(url));
             },
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 8),
-              child: Text('teamdesk.com',
+              child: Text('teamdesk.su',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
                   )),

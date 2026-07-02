@@ -6,14 +6,14 @@
   <a href="#file-structure">Structure</a> •
   <a href="#snapshot">Snapshot</a><br>
   [<a href="README-UA.md">Українська</a>] | [<a href="README-CS.md">česky</a>] | [<a href="README-ZH.md">中文</a>] | [<a href="README-HU.md">Magyar</a>] | [<a href="README-ES.md">Español</a>] | [<a href="README-FA.md">فارسی</a>] | [<a href="README-FR.md">Français</a>] | [<a href="README-DE.md">Deutsch</a>] | [<a href="README-PL.md">Polski</a>] | [<a href="README-ID.md">Indonesian</a>] | [<a href="README-FI.md">Suomi</a>] | [<a href="README-ML.md">മലയാളം</a>] | [<a href="README-JP.md">日本語</a>] | [<a href="README-NL.md">Nederlands</a>] | [<a href="README-IT.md">Italiano</a>] | [<a href="README-RU.md">Русский</a>] | [<a href="README-PTBR.md">Português (Brasil)</a>] | [<a href="README-EO.md">Esperanto</a>] | [<a href="README-KR.md">한국어</a>] | [<a href="README-AR.md">العربي</a>] | [<a href="README-VN.md">Tiếng Việt</a>] | [<a href="README-DA.md">Dansk</a>] | [<a href="README-GR.md">Ελληνικά</a>] | [<a href="README-TR.md">Türkçe</a>]<br>
-  <b>READMEや<a href="https://github.com/rustdesk/teamdesk/tree/master/src/lang">Teamdesk UI</a>、 <a href="https://github.com/rustdesk/doc.teamdesk.com">Teamdesk Doc</a>の翻訳者を歓迎します！</b>
+  <b>READMEや<a href="https://github.com/rustdesk/teamdesk/tree/master/src/lang">Teamdesk UI</a>、 <a href="https://github.com/rustdesk/doc.teamdesk.su">Teamdesk Doc</a>の翻訳者を歓迎します！</b>
 </p>
 
 私たちと話す: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/teamdesk) | [Reddit](https://www.reddit.com/r/teamdesk) | [YouTube](https://www.youtube.com/@teamdesk)
 
-[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-%E9%AB%98%E5%BA%A6%E3%81%AA%E6%A9%9F%E8%83%BD-blue)](https://teamdesk.com/pricing.html)
+[![Teamdesk Server Pro](https://img.shields.io/badge/Teamdesk%20Server%20Pro-%E9%AB%98%E5%BA%A6%E3%81%AA%E6%A9%9F%E8%83%BD-blue)](https://teamdesk.su/pricing.html)
 
-Rustで書かれた、設定不要ですぐに使えるリモートデスクトップソフトウェアです。自分のデータを完全にコントロールでき、セキュリティの心配もありません。私たちのランデブー/リレーサーバを使うことも、[自分でサーバーをセットアップする](https://teamdesk.com/server) ことも、 [自分でランデブー/リレーサーバを作成する](https://github.com/rustdesk/teamdesk-server-demo)こともできます。
+Rustで書かれた、設定不要ですぐに使えるリモートデスクトップソフトウェアです。自分のデータを完全にコントロールでき、セキュリティの心配もありません。私たちのランデブー/リレーサーバを使うことも、[自分でサーバーをセットアップする](https://teamdesk.su/server) ことも、 [自分でランデブー/リレーサーバを作成する](https://github.com/rustdesk/teamdesk-server-demo)こともできます。
 
 ![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png)
 
@@ -52,7 +52,7 @@ Sciter dynamic libraryを事前にダウンロードしてください。
 
 - `cargo run`を実行します。
 
-## [ビルド](https://teamdesk.com/docs/en/dev/build/)
+## [ビルド](https://teamdesk.su/docs/en/dev/build/)
 
 ## Linuxでのビルド方法
 

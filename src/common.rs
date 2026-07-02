@@ -950,7 +950,7 @@ pub fn check_software_update() {
 }
 
 // No need to check `danger_accept_invalid_cert` for now.
-// Because the url is always `https://api.teamdesk.com/version/latest`.
+// Because the url is always `https://api.teamdesk.su/version/latest`.
 #[tokio::main(flavor = "current_thread")]
 pub async fn do_check_software_update() -> hbb_common::ResultType<()> {
     let (request, url) =
@@ -1081,13 +1081,13 @@ fn get_api_server_(api: String, custom: String) -> String {
             return format!("http://{}", s);
         }
     }
-    "https://admin.teamdesk.com".to_owned()
+    "https://admin.teamdesk.su".to_owned()
 }
 
 #[inline]
 pub fn is_public(url: &str) -> bool {
     let url = url.to_ascii_lowercase();
-    url.contains("teamdesk.com/") || url.ends_with("teamdesk.com")
+    url.contains("teamdesk.su/") || url.ends_with("teamdesk.su")
 }
 
 pub fn get_udp_punch_enabled() -> bool {
@@ -2763,27 +2763,27 @@ mod tests {
 
     #[test]
     fn test_is_public() {
-        // Test URLs containing "teamdesk.com/"
-        assert!(is_public("https://teamdesk.com/"));
-        assert!(is_public("https://www.teamdesk.com/"));
-        assert!(is_public("https://api.teamdesk.com/v1"));
+        // Test URLs containing "teamdesk.su/"
+        assert!(is_public("https://teamdesk.su/"));
+        assert!(is_public("https://www.teamdesk.su/"));
+        assert!(is_public("https://api.teamdesk.su/v1"));
         assert!(is_public("https://API.TEAMDESK.COM/v1"));
-        assert!(is_public("https://teamdesk.com/path"));
+        assert!(is_public("https://teamdesk.su/path"));
 
-        // Test URLs ending with "teamdesk.com"
-        assert!(is_public("teamdesk.com"));
-        assert!(is_public("https://teamdesk.com"));
+        // Test URLs ending with "teamdesk.su"
+        assert!(is_public("teamdesk.su"));
+        assert!(is_public("https://teamdesk.su"));
         assert!(is_public("https://Teamdesk.com"));
-        assert!(is_public("http://www.teamdesk.com"));
-        assert!(is_public("https://api.teamdesk.com"));
+        assert!(is_public("http://www.teamdesk.su"));
+        assert!(is_public("https://api.teamdesk.su"));
 
         // Test non-public URLs
         assert!(!is_public("https://example.com"));
         assert!(!is_public("https://custom-server.com"));
         assert!(!is_public("http://192.168.1.1"));
         assert!(!is_public("localhost"));
-        assert!(!is_public("https://teamdesk.computer.com"));
-        assert!(!is_public("teamdesk.comhello.com"));
+        assert!(!is_public("https://teamdesk.suputer.com"));
+        assert!(!is_public("teamdesk.suhello.com"));
     }
 
     #[test]
@@ -2801,8 +2801,8 @@ mod tests {
             "https://admin.example.com"
         ));
         assert!(!should_use_tcp_proxy_for_api_url(
-            "https://admin.teamdesk.com/api/login",
-            "https://admin.teamdesk.com"
+            "https://admin.teamdesk.su/api/login",
+            "https://admin.teamdesk.su"
         ));
         assert!(!should_use_tcp_proxy_for_api_url(
             "https://admin.example.com/api/login",

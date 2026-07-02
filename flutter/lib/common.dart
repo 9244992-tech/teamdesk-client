@@ -3697,7 +3697,7 @@ Widget loadPowered(BuildContext context) {
     cursor: SystemMouseCursors.click,
     child: GestureDetector(
       onTap: () {
-        launchUrl(Uri.parse('https://teamdesk.com'));
+        launchUrl(Uri.parse('https://teamdesk.su'));
       },
       child: Opacity(
           opacity: 0.5,
@@ -3952,7 +3952,7 @@ get defaultOptionAccessMode => isCustomClient ? 'custom' : '';
 get defaultOptionApproveMode => isCustomClient ? 'password-click' : '';
 
 bool whitelistNotEmpty() {
-  // https://teamdesk.com/docs/en/self-host/client-configuration/advanced-settings/#whitelist
+  // https://teamdesk.su/docs/en/self-host/client-configuration/advanced-settings/#whitelist
   final v = bind.mainGetOptionSync(key: kOptionWhitelist);
   return v != '' && v != ',';
 }
