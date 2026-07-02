@@ -27,15 +27,15 @@ g_arpsystemcomponent = {
     },
     "Contact": {
         "msi": "ARPCONTACT",
-        "v": "https://github.com/rustdesk/teamdesk",
+        "v": "https://teamdesk.su",
     },
     "HelpLink": {
         "msi": "ARPHELPLINK",
-        "v": "https://github.com/rustdesk/teamdesk/issues/",
+        "v": "https://teamdesk.su/support",
     },
     "ReadMe": {
         "msi": "ARPREADME",
-        "v": "https://github.com/rustdesk/teamdesk",
+        "v": "https://teamdesk.su",
     },
 }
 
@@ -85,7 +85,7 @@ def make_parser():
         "-m",
         "--manufacturer",
         type=str,
-        default="Purslane Tech Pte. Ltd.",
+        default="SVYAZ LLC",
         help="The app manufacturer.",
     )
     return parser

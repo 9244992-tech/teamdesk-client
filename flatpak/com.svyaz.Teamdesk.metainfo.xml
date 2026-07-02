@@ -39,13 +39,13 @@
     <color type="primary" scheme_preference="dark">#0160ee</color>
   </branding>
   <url type="homepage">https://teamdesk.su</url>
-  <url type="bugtracker">https://github.com/rustdesk/teamdesk/issues</url>
-  <url type="faq">https://github.com/rustdesk/teamdesk/wiki/FAQ</url>
+  <url type="bugtracker">https://teamdesk.su/issues</url>
+  <url type="faq">https://teamdesk.su/wiki/FAQ</url>
   <url type="help">https://teamdesk.su/docs</url>
   <url type="donation">https://ko-fi.com/teamdesk</url>
-  <url type="vcs-browser">https://github.com/rustdesk/teamdesk</url>
-  <url type="translate">https://github.com/rustdesk/teamdesk/tree/master/src/lang</url>
-  <url type="contribute">https://github.com/rustdesk/teamdesk/blob/master/docs/CONTRIBUTING.md</url>
+  <url type="vcs-browser">https://teamdesk.su</url>
+  <url type="translate">https://teamdesk.su/tree/master/src/lang</url>
+  <url type="contribute">https://teamdesk.su/blob/master/docs/CONTRIBUTING.md</url>
   <url type="contact">https://teamdesk.su/docs/en/technical-support</url>
   <requires>
     <display_length compare="ge">600</display_length>

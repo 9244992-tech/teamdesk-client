@@ -16,11 +16,11 @@
 		in Control Panel's Add/Remove Programs https://learn.microsoft.com/en-us/windows/win32/msi/property-reference
 		-->
 		<!--<Property Id="ARPCOMMENTS" Value="!(loc.AR_Comment)" />
-		<Property Id="ARPCONTACT" Value="https://github.com/rustdesk/teamdesk" />
-		<Property Id="ARPHELPLINK" Value="https://github.com/rustdesk/teamdesk" />
-		<Property Id="ARPREADME" Value="https://github.com/rustdesk/teamdesk" />
-		<Property Id="ARPURLINFOABOUT" Value="https://github.com/rustdesk/teamdesk" />
-		<Property Id="ARPURLUPDATEINFO" Value="https://github.com/rustdesk/teamdesk" />-->
+		<Property Id="ARPCONTACT" Value="https://teamdesk.su" />
+		<Property Id="ARPHELPLINK" Value="https://teamdesk.su" />
+		<Property Id="ARPREADME" Value="https://teamdesk.su" />
+		<Property Id="ARPURLINFOABOUT" Value="https://teamdesk.su" />
+		<Property Id="ARPURLUPDATEINFO" Value="https://teamdesk.su" />-->
 
 		<Property Id="ARPPRODUCTICON" Value="AppIcon" />
 
