@@ -57,7 +57,6 @@ jobs:
     uses: ./.github/workflows/bridge.yml
 
   build-RustDeskTempTopMostWindow:
-    if: ${{ false }}  # DISABLED_build-RustDeskTempTopMostWindow (temp, re-enable for full build)
     uses: ./.github/workflows/third-party-RustDeskTempTopMostWindow.yml
     strategy:
       fail-fast: false
@@ -75,7 +74,6 @@ jobs:
       target_version: Windows10
 
   build-for-windows-flutter:
-    if: ${{ false }}  # DISABLED_build-for-windows-flutter (temp, re-enable for full build)
     name: ${{ matrix.job.target }}
     needs: [build-RustDeskTempTopMostWindow, generate-bridge]
     runs-on: ${{ matrix.job.os }}
@@ -364,7 +362,6 @@ jobs:
             ./SignOutput/teamdesk-*.exe
 
   build-teamdesk-linux:
-    if: ${{ false }}  # DISABLED_build-teamdesk-linux (temp, re-enable for final build)
     needs: [generate-bridge]
     name: build teamdesk linux ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.on }}
@@ -979,7 +976,6 @@ jobs:
           path: signed-apk/teamdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
 
   build-for-macOS:
-    if: ${{ false }}  # DISABLED_build-for-macos (staged; enable for final build)
     name: ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.os }}
     needs: [generate-bridge]
