@@ -635,7 +635,7 @@ class _DesktopTabState extends State<DesktopTab>
                       offstage: kUseCompatibleUiMode || isMacOS,
                       child: Row(children: [
                         Offstage(
-                          offstage: !showLogo,
+                          offstage: true,
                           child: loadIcon(16),
                         ),
                         Offstage(
