@@ -691,7 +691,6 @@ jobs:
             res/teamdesk-${{ env.VERSION }}*.zst
 
   build-teamdesk-android:
-    if: ${{ false }}  # DISABLED_build-teamdesk-android (design-preview build, re-enable for release)
     needs: [generate-bridge]
     name: build teamdesk android apk ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.os }}
@@ -977,7 +976,6 @@ jobs:
           path: signed-apk/teamdesk-${{ env.VERSION }}-${{ matrix.job.arch }}.apk
 
   build-for-macOS:
-    if: ${{ false }}  # DISABLED_build-for-macOS (design-preview build, re-enable for release)
     name: ${{ matrix.job.target }}
     runs-on: ${{ matrix.job.os }}
     needs: [generate-bridge]
