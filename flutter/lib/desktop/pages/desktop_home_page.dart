@@ -235,6 +235,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                         readOnly: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
+                          filled: false,
+                          isDense: true,
                           contentPadding: EdgeInsets.only(top: 10, bottom: 10),
                         ),
                         style: TextStyle(
@@ -333,6 +335,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                             readOnly: true,
                             decoration: InputDecoration(
                               border: InputBorder.none,
+                              filled: false,
+                              isDense: true,
                               contentPadding:
                                   EdgeInsets.only(top: 14, bottom: 10),
                             ),
@@ -622,8 +626,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Color.fromARGB(255, 226, 66, 188),
-                  Color.fromARGB(255, 244, 114, 124),
+                  Color(0xFF1E63D8),
+                  Color(0xFF3B82E0),
                 ],
               )),
               padding: EdgeInsets.all(20),
