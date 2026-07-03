@@ -515,8 +515,9 @@ class _DesktopTabState extends State<DesktopTab>
         if (stateGlobal.showTabBar.isTrue &&
             !(kUseCompatibleUiMode && isHideSingleItem())) {
           final showBottomDivider = _showTabBarBottomDivider(tabType);
-          return SizedBox(
+          return Container(
             height: _kTabBarHeight,
+            color: const Color(0xFF1E63D8),
             child: Column(
               children: [
                 SizedBox(
@@ -1293,7 +1294,7 @@ class _ActionIconState extends State<ActionIcon> {
           child: widget.onTap == null
               ? Icon(
                   widget.icon,
-                  color: Colors.grey,
+                  color: Colors.white54,
                   size: widget.iconSize,
                 )
               : Obx(
@@ -1301,7 +1302,7 @@ class _ActionIconState extends State<ActionIcon> {
                     widget.icon,
                     color: hover.value && widget.isClose
                         ? Colors.white
-                        : MyTheme.tabbar(context).unSelectedIconColor,
+                        : Colors.white70,
                     size: widget.iconSize,
                   ),
                 ),
