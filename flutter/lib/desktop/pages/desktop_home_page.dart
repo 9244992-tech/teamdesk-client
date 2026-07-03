@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hbb/common.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_hbb/common/widgets/animated_rotation_widget.dart';
 import 'package:flutter_hbb/common/widgets/custom_password.dart';
 import 'package:flutter_hbb/consts.dart';
@@ -399,6 +400,20 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         children: [
           Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 14),
+                child: Row(
+                  children: [
+                    SvgPicture.asset('assets/icon.svg', height: 34),
+                    const SizedBox(width: 10),
+                    Text('Teamdesk',
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: MyTheme.accent)),
+                  ],
+                ),
+              ),
               if (!isOutgoingOnly)
                 Align(
                   alignment: Alignment.centerLeft,
