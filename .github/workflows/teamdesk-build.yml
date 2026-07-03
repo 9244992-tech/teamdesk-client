@@ -1,5 +1,7 @@
 name: Teamdesk build
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       upload-artifact:
