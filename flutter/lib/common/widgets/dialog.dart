@@ -69,6 +69,48 @@ class RegexValidationRule extends ValidationRule {
   }
 }
 
+// Teamdesk: reserve a named ID under the current account before changing the
+// device ID. Returns null on success (or if not applicable), else an error msg.
+Future<String?> _teamdeskClaimNamedId(String namedId) async {
+  try {
+    final url = await bind.mainGetApiServer();
+    final token = bind.mainGetLocalOption(key: 'access_token');
+    if (url.isEmpty || token.isEmpty) return null;
+    final resp = await http
+        .post(Uri.parse('$url/ids/claim'),
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+            body: jsonEncode({'named_id': namedId}))
+        .timeout(const Duration(seconds: 10));
+    if (resp.statusCode == 200) return null;
+    if (resp.statusCode == 409) {
+      // Already registered — allow if this account already owns it.
+      try {
+        final mine = await http
+            .get(Uri.parse('$url/ids'),
+                headers: {'Authorization': 'Bearer $token'})
+            .timeout(const Duration(seconds: 8));
+        final list = jsonDecode(mine.body);
+        if (list is List && list.any((e) => e['named_id'] == namedId)) {
+          return null;
+        }
+      } catch (_) {}
+      return 'Этот именной ID уже занят';
+    }
+    try {
+      final data = jsonDecode(resp.body);
+      return (data['detail'] ?? data['error'] ?? 'HTTP ${resp.statusCode}')
+          .toString();
+    } catch (_) {
+      return 'HTTP ${resp.statusCode}';
+    }
+  } catch (e) {
+    return e.toString();
+  }
+}
+
 void changeIdDialog() {
   var newId = "";
   var msg = "";
@@ -100,6 +142,23 @@ void changeIdDialog() {
       setState(() {
         msg = "";
         isInProgress = true;
+      });
+
+      // Teamdesk: reserve the named ID under the logged-in account (paid feature)
+      if (gFFI.userModel.isLogin) {
+        final claimErr = await _teamdeskClaimNamedId(newId);
+        if (claimErr != null) {
+          setState(() {
+            isInProgress = false;
+            msg = (isDesktop || isWebDesktop)
+                ? '${translate('Prompt')}: $claimErr'
+                : claimErr;
+          });
+          return;
+        }
+      }
+
+      setState(() {
         bind.mainChangeId(newId: newId);
       });
 
