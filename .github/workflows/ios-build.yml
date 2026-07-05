@@ -9,7 +9,8 @@ on:
 
 env:
   FLUTTER_VERSION: "3.24.5"
-  RUST_VERSION: "1.81"
+  RUST_VERSION: "1.75"
+  VCPKG_COMMIT_ID: "120deac3062162151622ca4860575a33844ba10b"
 
 jobs:
   generate-bridge:
@@ -20,10 +21,52 @@ jobs:
     needs: [generate-bridge]
     runs-on: macos-14
     steps:
+      - name: Export GitHub Actions cache environment variables
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+      - name: Install dependencies
+        run: brew install nasm yasm
+
       - name: Checkout source code
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Install flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Patch flutter
+        run: |
+          cd $(dirname $(dirname $(which flutter)))
+          [[ "3.24.5" == ${{ env.FLUTTER_VERSION }} ]] && git apply ${{ github.workspace }}/.github/patches/flutter_3.24.4_dropdown_menu_enableFilter.diff || true
+
+      - name: Setup vcpkg with Github Actions binary cache
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: ${{ env.VCPKG_COMMIT_ID }}
+          doNotCache: false
+
+      - name: Install vcpkg dependencies (arm64-ios)
+        run: |
+          if ! $VCPKG_ROOT/vcpkg install --triplet arm64-ios --x-install-root="$VCPKG_ROOT/installed"; then
+            find "${VCPKG_ROOT}/" -name "*.log" | while read -r _1; do echo "$_1:"; cat "$_1"; echo ""; done
+            exit 1
+          fi
+        shell: bash
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          targets: aarch64-apple-ios
+          components: "rustfmt"
 
       - name: Restore bridge files
         uses: actions/download-artifact@v4
@@ -31,44 +74,32 @@ jobs:
           name: bridge-artifact
           path: ./
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          architecture: arm64
-
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: ${{ env.RUST_VERSION }}
-          targets: aarch64-apple-ios
-
-      - name: Build Rust core for iOS (arm64)
+      - name: Build teamdesk lib (iOS arm64)
         run: |
           rustup target add aarch64-apple-ios
           cargo build --locked --features flutter,hwcodec --release --target aarch64-apple-ios --lib
 
-      - name: Sync bridge iOS header
-        run: cp ./flutter/macos/Runner/bridge_generated.h ./flutter/ios/Runner/bridge_generated.h || true
-
-      - name: Flutter build iOS (no codesign)
+      - name: Build teamdesk (flutter, no codesign)
+        shell: bash
         run: |
-          cd flutter
-          flutter pub get
-          flutter build ios --release --no-codesign
+          pushd flutter
+          flutter build ipa --release --no-codesign || flutter build ios --release --no-codesign
+          popd
 
       - name: Package unsigned .ipa
+        shell: bash
         run: |
-          cd flutter/build/ios/iphoneos
-          mkdir -p Payload
-          cp -r Runner.app Payload/
-          zip -r -y teamdesk-ios-unsigned.ipa Payload
-          ls -la
+          APP=$(find flutter/build/ios -name "Runner.app" -type d | head -1)
+          echo "Runner.app: $APP"
+          if [ -z "$APP" ]; then echo "Runner.app not found"; find flutter/build/ios -maxdepth 3 -type d; exit 1; fi
+          rm -rf Payload && mkdir -p Payload
+          cp -r "$APP" Payload/
+          zip -r -y teamdesk-ios-unsigned.ipa Payload >/dev/null
+          ls -la teamdesk-ios-unsigned.ipa
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: teamdesk-ios-unsigned
-          path: flutter/build/ios/iphoneos/teamdesk-ios-unsigned.ipa
+          path: teamdesk-ios-unsigned.ipa
           if-no-files-found: warn
