@@ -1,0 +1,74 @@
+name: iOS build (unsigned)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/ios-build.yml'
+
+env:
+  FLUTTER_VERSION: "3.24.5"
+  RUST_VERSION: "1.81"
+
+jobs:
+  generate-bridge:
+    uses: ./.github/workflows/bridge.yml
+
+  build-ios:
+    name: build teamdesk ios (unsigned)
+    needs: [generate-bridge]
+    runs-on: macos-14
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Restore bridge files
+        uses: actions/download-artifact@v4
+        with:
+          name: bridge-artifact
+          path: ./
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          architecture: arm64
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          targets: aarch64-apple-ios
+
+      - name: Build Rust core for iOS (arm64)
+        run: |
+          rustup target add aarch64-apple-ios
+          cargo build --locked --features flutter,hwcodec --release --target aarch64-apple-ios --lib
+
+      - name: Sync bridge iOS header
+        run: cp ./flutter/macos/Runner/bridge_generated.h ./flutter/ios/Runner/bridge_generated.h || true
+
+      - name: Flutter build iOS (no codesign)
+        run: |
+          cd flutter
+          flutter pub get
+          flutter build ios --release --no-codesign
+
+      - name: Package unsigned .ipa
+        run: |
+          cd flutter/build/ios/iphoneos
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -r -y teamdesk-ios-unsigned.ipa Payload
+          ls -la
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: teamdesk-ios-unsigned
+          path: flutter/build/ios/iphoneos/teamdesk-ios-unsigned.ipa
+          if-no-files-found: warn
