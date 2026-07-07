@@ -211,6 +211,40 @@ fn exec_task(cli: &reqwest::blocking::Client, dtok: &str, t: &Value) {
     );
 }
 
+/// Применяет политику (desired-state): выполняет шаги по порядку и шлёт результат.
+/// Сервер доставляет политику пока applied_revision < revision, поэтому агент
+/// переприменяет её при каждом изменении и при первом зачислении в область.
+fn apply_policy(cli: &reqwest::blocking::Client, dtok: &str, p: &Value) {
+    let policy_id = p.get("policy_id").and_then(|x| x.as_str()).unwrap_or("");
+    let revision = p.get("revision").and_then(|x| x.as_i64()).unwrap_or(0);
+    let steps = p
+        .get("spec")
+        .and_then(|s| s.get("steps"))
+        .and_then(|x| x.as_array())
+        .cloned()
+        .unwrap_or_default();
+    let mut status = "applied".to_owned();
+    let mut out = String::new();
+    for (i, step) in steps.iter().enumerate() {
+        let ty = step.get("type").and_then(|x| x.as_str()).unwrap_or("command");
+        let run = step.get("run").and_then(|x| x.as_str()).unwrap_or("");
+        let (st, so) = run_shell(ty, run);
+        if st == "error" {
+            status = "error".to_owned();
+            out.push_str(&format!("[{}] ОШИБКА: {}\n{}\n", i + 1, run, so));
+            break;
+        }
+        out.push_str(&format!("[{}] OK: {}\n{}\n", i + 1, run, so));
+    }
+    let out: String = out.chars().take(20000).collect();
+    let _ = post(
+        cli,
+        "/agent/policy-result",
+        &json!({"device_token": dtok, "policy_id": policy_id, "revision": revision, "status": status, "output": out}),
+    );
+    log::info!("[UEM] policy {} rev {} -> {}", policy_id, revision, status);
+}
+
 fn run() {
     let cli = client();
     let mut dtok = Config::get_option("uem-device-token");
@@ -253,6 +287,11 @@ fn run() {
             if let Some(tasks) = hb.get("tasks").and_then(|x| x.as_array()) {
                 for t in tasks {
                     exec_task(&cli, &dtok, t);
+                }
+            }
+            if let Some(pols) = hb.get("policies").and_then(|x| x.as_array()) {
+                for p in pols {
+                    apply_policy(&cli, &dtok, p);
                 }
             }
         }
