@@ -167,6 +167,53 @@ fn run_shell(ty: &str, payload: &str) -> (String, String) {
     }
 }
 
+/// Локальный прогон Ansible-плейбука (ansible-pull модель: -c local).
+/// Windows не является нативным control-node Ansible → понятная ошибка.
+fn run_ansible(playbook: &str) -> (String, String) {
+    #[cfg(windows)]
+    {
+        let _ = playbook;
+        (
+            "error".to_owned(),
+            "ansible на Windows не поддерживается (используйте команды/скрипты; Ansible — для Linux/macOS)"
+                .to_owned(),
+        )
+    }
+    #[cfg(not(windows))]
+    {
+        use std::io::Write;
+        let present = std::process::Command::new("ansible-playbook")
+            .arg("--version")
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false);
+        if !present {
+            return (
+                "error".to_owned(),
+                "ansible-playbook не установлен на устройстве".to_owned(),
+            );
+        }
+        let path = std::env::temp_dir().join(format!("td-play-{}.yml", std::process::id()));
+        if let Ok(mut f) = std::fs::File::create(&path) {
+            let _ = f.write_all(playbook.as_bytes());
+        }
+        let out = std::process::Command::new("ansible-playbook")
+            .args(["-i", "localhost,", "-c", "local"])
+            .arg(&path)
+            .output();
+        let _ = std::fs::remove_file(&path);
+        match out {
+            Ok(o) => {
+                let mut s = String::from_utf8_lossy(&o.stdout).to_string();
+                s.push_str(&String::from_utf8_lossy(&o.stderr));
+                let status = if o.status.success() { "success" } else { "error" };
+                (status.to_owned(), s)
+            }
+            Err(e) => ("error".to_owned(), e.to_string()),
+        }
+    }
+}
+
 fn do_reboot() {
     #[cfg(windows)]
     {
@@ -189,6 +236,7 @@ fn exec_task(cli: &reqwest::blocking::Client, dtok: &str, t: &Value) {
     log::info!("[UEM] task {} run_id={}", ty, run_id);
     let (status, output) = match ty {
         "command" | "script" => run_shell(ty, payload),
+        "ansible" => run_ansible(payload),
         "inventory" => {
             let _ = post(
                 cli,
@@ -228,13 +276,22 @@ fn apply_policy(cli: &reqwest::blocking::Client, dtok: &str, p: &Value) {
     for (i, step) in steps.iter().enumerate() {
         let ty = step.get("type").and_then(|x| x.as_str()).unwrap_or("command");
         let run = step.get("run").and_then(|x| x.as_str()).unwrap_or("");
-        let (st, so) = run_shell(ty, run);
+        let (st, so) = if ty == "ansible" {
+            let pb = step
+                .get("playbook")
+                .and_then(|x| x.as_str())
+                .unwrap_or(run);
+            run_ansible(pb)
+        } else {
+            run_shell(ty, run)
+        };
+        let label = if ty == "ansible" { "ANSIBLE" } else { run };
         if st == "error" {
             status = "error".to_owned();
-            out.push_str(&format!("[{}] ОШИБКА: {}\n{}\n", i + 1, run, so));
+            out.push_str(&format!("[{}] ОШИБКА: {}\n{}\n", i + 1, label, so));
             break;
         }
-        out.push_str(&format!("[{}] OK: {}\n{}\n", i + 1, run, so));
+        out.push_str(&format!("[{}] OK: {}\n{}\n", i + 1, label, so));
     }
     let out: String = out.chars().take(20000).collect();
     let _ = post(
