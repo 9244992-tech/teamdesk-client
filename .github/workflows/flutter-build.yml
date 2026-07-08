@@ -1174,7 +1174,10 @@ jobs:
         if: env.UPLOAD_ARTIFACT == 'true'
         run: |
           for name in teamdesk*??.dmg; do
-              mv "$name" "${name%%.dmg}-${{ matrix.job.arch }}.dmg"
+              case "$name" in
+                *-${{ matrix.job.arch }}.dmg) : ;;  # уже с arch (unsigned-путь) — не дублировать
+                *) mv "$name" "${name%%.dmg}-${{ matrix.job.arch }}.dmg" ;;
+              esac
           done
 
       - name: Publish DMG package
