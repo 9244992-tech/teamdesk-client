@@ -88,6 +88,31 @@ fn hostname() -> String {
     }
 }
 
+fn software_list() -> Vec<String> {
+    #[cfg(target_os = "windows")]
+    let raw = sh(
+        "powershell -NoProfile -Command \"Get-ItemProperty \
+         'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*',\
+         'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*' \
+         -EA SilentlyContinue | ? DisplayName | % { ($_.DisplayName+' '+$_.DisplayVersion).Trim() }\"",
+    );
+    #[cfg(target_os = "linux")]
+    let raw = sh("dpkg-query -W -f='${Package} ${Version}\n' 2>/dev/null || rpm -qa --qf '%{NAME} %{VERSION}\n' 2>/dev/null");
+    #[cfg(target_os = "macos")]
+    let raw = sh("brew list --versions 2>/dev/null; ls -1 /Applications 2>/dev/null | sed 's/\\.app$//'");
+    #[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
+    let raw = String::new();
+    let mut items: Vec<String> = raw
+        .lines()
+        .map(|l| l.trim().to_string())
+        .filter(|l| !l.is_empty())
+        .collect();
+    items.sort();
+    items.dedup();
+    items.truncate(1000);
+    items
+}
+
 fn inventory() -> Value {
     let mut inv = json!({
         "имя хоста": hostname(),
@@ -95,6 +120,11 @@ fn inventory() -> Value {
         "архитектура": std::env::consts::ARCH,
         "teamdesk_id": Config::get_id(),
     });
+    let sw = software_list();
+    if !sw.is_empty() {
+        inv["ПО (пакетов)"] = json!(sw.len());
+        inv["_software"] = json!(sw);
+    }
     #[cfg(target_os = "windows")]
     {
         inv["система"] = json!(sh("ver"));
