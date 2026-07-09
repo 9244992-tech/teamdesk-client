@@ -113,6 +113,71 @@ fn software_list() -> Vec<String> {
     items
 }
 
+fn metrics() -> Value {
+    let mut m = serde_json::Map::new();
+    #[cfg(not(windows))]
+    {
+        let d = sh("df -P / 2>/dev/null | tail -1 | awk '{print $5}' | tr -d '%'");
+        if let Ok(v) = d.trim().parse::<i64>() {
+            m.insert("disk_used_pct".to_string(), json!(v));
+        }
+    }
+    #[cfg(target_os = "linux")]
+    {
+        let mem = sh("awk '/MemTotal/{t=$2} /MemAvailable/{a=$2} END{if(t>0) printf \"%.0f\", (t-a)*100/t}' /proc/meminfo");
+        if let Ok(v) = mem.trim().parse::<i64>() {
+            m.insert("mem_used_pct".to_string(), json!(v));
+        }
+        let la = sh("cut -d' ' -f1 /proc/loadavg");
+        if let Ok(v) = la.trim().parse::<f64>() {
+            m.insert("cpu_load".to_string(), json!(v));
+        }
+        let up = sh("cut -d. -f1 /proc/uptime");
+        if let Ok(v) = up.trim().parse::<i64>() {
+            m.insert("uptime_sec".to_string(), json!(v));
+        }
+    }
+    #[cfg(target_os = "macos")]
+    {
+        let la = sh("sysctl -n vm.loadavg 2>/dev/null | awk '{print $2}'");
+        if let Ok(v) = la.trim().parse::<f64>() {
+            m.insert("cpu_load".to_string(), json!(v));
+        }
+    }
+    #[cfg(target_os = "windows")]
+    {
+        let raw = sh("wmic logicaldisk where \"DeviceID='C:'\" get FreeSpace,Size /format:value");
+        let (mut free, mut size) = (0f64, 0f64);
+        for line in raw.lines() {
+            let l = line.trim();
+            if let Some(v) = l.strip_prefix("FreeSpace=") {
+                free = v.trim().parse().unwrap_or(0.0);
+            }
+            if let Some(v) = l.strip_prefix("Size=") {
+                size = v.trim().parse().unwrap_or(0.0);
+            }
+        }
+        if size > 0.0 {
+            m.insert("disk_used_pct".to_string(), json!(((size - free) * 100.0 / size).round() as i64));
+        }
+        let raw2 = sh("wmic OS get FreePhysicalMemory,TotalVisibleMemorySize /format:value");
+        let (mut fp, mut tv) = (0f64, 0f64);
+        for line in raw2.lines() {
+            let l = line.trim();
+            if let Some(v) = l.strip_prefix("FreePhysicalMemory=") {
+                fp = v.trim().parse().unwrap_or(0.0);
+            }
+            if let Some(v) = l.strip_prefix("TotalVisibleMemorySize=") {
+                tv = v.trim().parse().unwrap_or(0.0);
+            }
+        }
+        if tv > 0.0 {
+            m.insert("mem_used_pct".to_string(), json!(((tv - fp) * 100.0 / tv).round() as i64));
+        }
+    }
+    Value::Object(m)
+}
+
 fn inventory() -> Value {
     let mut inv = json!({
         "имя хоста": hostname(),
@@ -120,6 +185,10 @@ fn inventory() -> Value {
         "архитектура": std::env::consts::ARCH,
         "teamdesk_id": Config::get_id(),
     });
+    let mt = metrics();
+    if mt.as_object().map(|o| !o.is_empty()).unwrap_or(false) {
+        inv["_metrics"] = mt;
+    }
     let sw = software_list();
     if !sw.is_empty() {
         inv["ПО (пакетов)"] = json!(sw.len());
