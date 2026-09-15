@@ -218,6 +218,8 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("Verification code", "Проверочный код"),
         ("verification_tip", "Обнаружено новое устройство, на зарегистрированный адрес электронной почты отправлен проверочный код. Введите его, чтобы продолжить вход в систему."),
         ("Logout", "Выйти"),
+        ("Delete account", "Удалить аккаунт"),
+        ("Delete your account and all its data? This cannot be undone.", "Удалить аккаунт и все его данные? Отменить это будет нельзя."),
         ("Tags", "Метки"),
         ("Search ID", "Поиск по ID"),
         ("whitelist_sep", "Разделение запятой, точкой с запятой, пробелом или новой строкой."),

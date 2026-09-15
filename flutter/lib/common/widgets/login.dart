@@ -806,7 +806,35 @@ void logOutConfirmDialog() {
       content: Text(translate("logout_tip")),
       actions: [
         dialogButton(translate("Cancel"), onPressed: close, isOutline: true),
+        dialogButton(translate("Delete account"), onPressed: () {
+          close();
+          deleteAccountConfirmDialog();
+        }, isOutline: true),
         dialogButton(translate("OK"), onPressed: submit),
+      ],
+      onSubmit: submit,
+      onCancel: close,
+    );
+  });
+}
+
+void deleteAccountConfirmDialog() {
+  gFFI.dialogManager.show((setState, close, context) {
+    submit() async {
+      close();
+      final err = await gFFI.userModel.deleteAccount();
+      if (err != null) {
+        showToast('${translate("Error")}: $err');
+      }
+    }
+
+    return CustomAlertDialog(
+      title: Text(translate("Delete account")),
+      content: Text(translate(
+          "Delete your account and all its data? This cannot be undone.")),
+      actions: [
+        dialogButton(translate("Cancel"), onPressed: close, isOutline: true),
+        dialogButton(translate("Delete account"), onPressed: submit),
       ],
       onSubmit: submit,
       onCancel: close,

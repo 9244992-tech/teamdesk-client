@@ -174,6 +174,28 @@ class UserModel {
     }
   }
 
+  /// Удаление аккаунта на сервере (требование App Store 5.1.1(v)).
+  /// Возвращает null при успехе или текст ошибки.
+  Future<String?> deleteAccount() async {
+    final tag = gFFI.dialogManager.showLoading(translate('Waiting'));
+    try {
+      final url = await bind.mainGetApiServer();
+      final authHeaders = getHttpHeaders();
+      final resp = await http
+          .delete(Uri.parse('$url/api/account'), headers: authHeaders)
+          .timeout(Duration(seconds: 15));
+      if (resp.statusCode != 200) {
+        return 'HTTP ${resp.statusCode}';
+      }
+      await reset(resetOther: true);
+      return null;
+    } catch (e) {
+      return e.toString();
+    } finally {
+      gFFI.dialogManager.dismissByTag(tag);
+    }
+  }
+
   /// throw [RequestException]
   Future<LoginResponse> login(LoginRequest loginRequest) async {
     final url = await bind.mainGetApiServer();

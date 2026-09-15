@@ -218,6 +218,8 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("Verification code", ""),
         ("verification_tip", ""),
         ("Logout", ""),
+        ("Delete account", ""),
+        ("Delete your account and all its data? This cannot be undone.", ""),
         ("Tags", ""),
         ("Search ID", ""),
         ("whitelist_sep", ""),
