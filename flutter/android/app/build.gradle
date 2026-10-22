@@ -91,15 +91,16 @@ android {
         main.proto.includes += "message.proto"
     }
 
+    // Java и Kotlin должны собираться под один JVM target, иначе flutter
+    // останавливает сборку с "Inconsistent JVM Target Compatibility".
+    // Берём 17 - версию JDK, на которой собирает и CI, и Android Studio.
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_17
     }
 
-    // AGP 8 требует, чтобы Kotlin компилировался под тот же JVM target, что и
-    // Java, иначе сборка падает с "Inconsistent JVM Target Compatibility".
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {

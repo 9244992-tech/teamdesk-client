@@ -195,7 +195,7 @@ jobs:
           if ! flutter build appbundle --release --target-platform android-arm64 2>&1 | tee /tmp/aab.log; then
             # логи job видны только после входа в GitHub, поэтому выносим суть
             # ошибки в аннотацию прогона - она доступна без входа
-            TAIL=$(grep -E "FAILURE|What went wrong|error:|Error|Caused by|^> " /tmp/aab.log | tail -20 | tr '\n' '~' | cut -c1-2500)
+            TAIL=$(tail -45 /tmp/aab.log | tr '\n' '~' | cut -c1-2500)
             echo "::error::$TAIL"
             exit 1
           fi
