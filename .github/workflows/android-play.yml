@@ -45,9 +45,13 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       - name: Install dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          # без таймаутов шаг однажды завис на apt больше чем на два часа
+          APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30"
+          sudo timeout 600 apt-get $APT_OPTS update
+          sudo timeout 1800 apt-get $APT_OPTS install -y \
                clang \
                cmake \
                curl \
