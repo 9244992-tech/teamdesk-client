@@ -219,6 +219,8 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("verification_tip", ""),
         ("Logout", ""),
         ("Delete account", ""),
+        ("accessibility_disclosure_text", ""),
+        ("accessibility_disclosure_agree", ""),
         ("Delete your account and all its data? This cannot be undone.", ""),
         ("Tags", ""),
         ("Search ID", ""),

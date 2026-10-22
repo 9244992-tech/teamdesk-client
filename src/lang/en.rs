@@ -1,6 +1,8 @@
 lazy_static::lazy_static! {
 pub static ref T: std::collections::HashMap<&'static str, &'static str> =
     [
+        ("accessibility_disclosure_text", "To control this device remotely, Teamdesk uses the Android accessibility service. Once enabled, it can read screen content and perform taps and gestures so the person you granted access to can operate the device. The data is sent only to the session participant and is not used for anything else. The service works only during a session you confirmed and can be turned off at any time."),
+        ("accessibility_disclosure_agree", "I understand and allow Teamdesk to use the accessibility service for remote control"),
         ("desk_tip", "Your desktop can be accessed with this ID and password."),
         ("connecting_status", "Connecting to the Teamdesk network..."),
         ("not_ready_status", "Not ready. Please check your connection"),

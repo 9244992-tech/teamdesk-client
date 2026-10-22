@@ -909,8 +909,13 @@ String getLoginDialogTag(int id) {
 }
 
 showInputWarnAlert(FFI ffi) {
+  // Требование Google Play (политика Accessibility API): перед включением
+  // службы специальных возможностей приложение обязано показать понятное
+  // раскрытие — какие данные доступны и зачем — и получить явное согласие.
+  bool agreed = false;
   ffi.dialogManager.show((setState, close, context) {
     submit() {
+      if (!agreed) return;
       AndroidPermissionManager.startAction(kActionAccessibilitySettings);
       close();
     }
@@ -919,15 +924,33 @@ showInputWarnAlert(FFI ffi) {
       title: Text(translate("How to get Android input permission?")),
       content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(translate("accessibility_disclosure_text")),
+          const SizedBox(height: 10),
           Text(translate("android_input_permission_tip1")),
           const SizedBox(height: 10),
           Text(translate("android_input_permission_tip2")),
+          const SizedBox(height: 10),
+          InkWell(
+            onTap: () => setState(() => agreed = !agreed),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Checkbox(
+                    value: agreed,
+                    onChanged: (v) => setState(() => agreed = v ?? false)),
+                Expanded(
+                    child: Text(translate("accessibility_disclosure_agree"))),
+              ],
+            ),
+          ),
         ],
       ),
       actions: [
         dialogButton("Cancel", onPressed: close, isOutline: true),
-        dialogButton("Open System Setting", onPressed: submit),
+        dialogButton("Open System Setting",
+            onPressed: agreed ? submit : null),
       ],
       onSubmit: submit,
       onCancel: close,
