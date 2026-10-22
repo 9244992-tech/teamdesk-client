@@ -136,7 +136,7 @@ fn make_tray() -> hbb_common::ResultType<()> {
         );
 
         if let tao::event::Event::NewEvents(tao::event::StartCause::Init) = event {
-            // for fixing https://github.com/rustdesk/teamdesk/discussions/10210#discussioncomment-14600745
+            // for fixing upstream discussion 10210#discussioncomment-14600745
             // so we start tray, but not to show it
             if crate::ui_interface::get_builtin_option(hbb_common::config::keys::OPTION_HIDE_TRAY) == "Y" {
                 return;

@@ -231,7 +231,7 @@ pub fn translate_locale(name: String, locale: &str) -> String {
                 if !app_name.contains("Teamdesk") {
                     s = s.replace("Teamdesk", &app_name);
                 } else {
-                    // https://github.com/rustdesk/teamdesk-server-pro/issues/845
+                    // upstream issue 845
                     // If app_name contains "Teamdesk" (e.g., "Teamdesk-Admin"), we need to avoid
                     // replacing "Teamdesk" within the already-substituted app_name, which would
                     // cause duplication like "Teamdesk-Admin" -> "Teamdesk-Admin-Admin".

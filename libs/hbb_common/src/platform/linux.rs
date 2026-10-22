@@ -26,7 +26,7 @@ lazy_static::lazy_static! {
 // No idea why the audit logs happen.
 // Though the audit logs may disappear after rebooting.
 //
-// See https://github.com/rustdesk/teamdesk/discussions/11959
+// See upstream discussion 11959
 //
 // `ausearch -x /usr/share/teamdesk/teamdesk` will return
 // ...
@@ -232,7 +232,7 @@ fn _get_values_of_seat0(indices: &[usize], ignore_gdm_wayland: bool) -> Vec<Stri
             }
         }
 
-        // some case, there is no seat0 https://github.com/rustdesk/teamdesk/issues/73
+        // some case, there is no seat0 upstream issue 73
         for line in String::from_utf8_lossy(&output.stdout).lines() {
             if ignore_loginctl_line(line) {
                 continue;

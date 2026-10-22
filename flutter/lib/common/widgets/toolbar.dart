@@ -448,7 +448,7 @@ List<TTextMenu> toolbarControls(BuildContext context, String id, FFI ffi) {
         onPressed: () => ffi.cursorModel.reset()));
   }
 
-  // https://github.com/rustdesk/teamdesk/pull/9731
+  // upstream PR 9731
   // Does not work for connection established by "accept".
   connectWithToken(
       {bool isFileTransfer = false,

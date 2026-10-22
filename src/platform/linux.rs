@@ -58,7 +58,7 @@ lazy_static::lazy_static! {
     };
     static ref ACTIVE_USER_LOOKUP_CACHE: std::sync::Mutex<Option<ActiveUserLookupCache>> =
         std::sync::Mutex::new(None);
-    // https://github.com/rustdesk/teamdesk/issues/13705
+    // upstream issue 13705
     // Check if `sudo -E` actually preserves environment.
     //
     // This flag is only used by `run_as_user()` (root service -> user session). If the current process is not
@@ -151,7 +151,7 @@ static X_UNEXPECTED_ERROR_DETECTED: AtomicBool = AtomicBool::new(false);
 
 /// Custom X error handler that catches BadWindow errors (error_code == 3) instead of
 /// letting the default handler terminate the process.
-/// See issue: https://github.com/rustdesk/teamdesk/issues/9003
+/// See issue: upstream issue 9003
 unsafe extern "C" fn handle_x_error(_display: *mut c_void, event: *mut XErrorEvent) -> c_int {
     if !event.is_null() && (*event).error_code == X11_BAD_WINDOW {
         X_BAD_WINDOW_DETECTED.store(true, Ordering::SeqCst);
@@ -871,7 +871,7 @@ pub fn start_os_service() {
         let keeps_headless = sid.is_empty() && desktop.is_headless();
         let keeps_session = sid == desktop.sid;
         if keeps_headless || keeps_session {
-            // for fixing https://github.com/rustdesk/teamdesk/issues/3129 to avoid too much dbus calling,
+            // for fixing upstream issue 3129 to avoid too much dbus calling,
             sleep_millis(500);
         } else {
             sleep_millis(super::SERVICE_INTERVAL);
@@ -1045,7 +1045,7 @@ pub fn is_locked() -> bool {
     let values = get_values_of_seat0(&[0]);
     // Though the values can't be empty, we still add check here for safety.
     // Because we cannot guarantee whether the internal implementation will change in the future.
-    // https://github.com/rustdesk/hbb_common/blob/ebb4d4a48cf7ed6ca62e93f8ed124065c6408536/src/platform/linux.rs#L119
+    // upstream hbb_common
     if values.is_empty() {
         log::debug!("Failed to check is locked, values vector is empty.");
         return false;
@@ -1358,7 +1358,7 @@ fn get_envs<'a>(
 
 /// Deprecated: Use `get_envs` instead.
 ///
-/// https://github.com/rustdesk/teamdesk/discussions/11959
+/// upstream discussion 11959
 ///
 /// **Note**: This function is retained for conservative migration. The plan is to gradually
 /// transition all callers to `get_envs` after it proves stable and reliable. Once `get_envs`
@@ -2115,7 +2115,7 @@ pub fn check_autostart_config() -> ResultType<()> {
     let app_name = crate::get_app_name().to_lowercase();
     let path = format!("{home}/.config/autostart");
     let file = format!("{path}/{app_name}.desktop");
-    // https://github.com/rustdesk/teamdesk/issues/4863
+    // upstream issue 4863
     std::fs::remove_file(&file).ok();
     /*
         std::fs::create_dir_all(&path).ok();
