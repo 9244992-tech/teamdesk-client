@@ -703,7 +703,7 @@ pub fn request_remote_desktop(
             }
         }
     }
-    bail!("Failed to obtain screen capture. You may need to upgrade the PipeWire library for better compatibility. Please check https://github.com/rustdesk/teamdesk/issues/8600#issuecomment-2254720954 for more details.")
+    bail!("Failed to obtain screen capture. You may need to upgrade the PipeWire library for better compatibility. Please check https://teamdesk.su/docs/ for more details.")
 }
 
 fn on_create_session_response(
