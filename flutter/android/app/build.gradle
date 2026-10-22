@@ -96,6 +96,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
 
+    // AGP 8 требует, чтобы Kotlin компилировался под тот же JVM target, что и
+    // Java, иначе сборка падает с "Inconsistent JVM Target Compatibility".
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "su.teamdesk.client"
