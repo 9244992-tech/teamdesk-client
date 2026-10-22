@@ -6,16 +6,16 @@ allprojects {
     }
 }
 
-// Плагины Flutter, написанные до AGP 8, задают имя пакета только в своём
-// AndroidManifest.xml. AGP 8 это больше не принимает и требует namespace,
-// иначе сборка падает с "Namespace not specified". Подставляем namespace
-// из манифеста тем подпроектам, где он не задан.
+// Правки для сторонних плагинов Flutter, написанных до AGP 8 и Kotlin 2.
 // Блок идёт до evaluationDependsOn(':app') ниже: тот оценивает проект сразу,
 // а afterEvaluate у уже оценённого проекта бросает исключение.
 subprojects {
     if (!state.executed) {
         afterEvaluate { project ->
             def androidExt = project.extensions.findByName("android")
+
+            // 1. AGP 8 требует namespace, а старые плагины задают имя пакета
+            //    только в AndroidManifest - без этого "Namespace not specified".
             if (androidExt != null && androidExt.namespace == null) {
                 def manifestFile = project.file("src/main/AndroidManifest.xml")
                 if (manifestFile.exists()) {
@@ -23,6 +23,30 @@ subprojects {
                     if (pkg) {
                         androidExt.namespace = pkg
                         project.logger.lifecycle("namespace ${pkg} подставлен для ${project.name}")
+                    }
+                }
+            }
+
+            // 2. Java и Kotlin должны собираться под один JVM target. Плагины
+            //    держат Java на 1.8, а Kotlin 2.1 берёт версию JDK (17), и
+            //    сборка падает с "Inconsistent JVM Target Compatibility".
+            //    Приводим обе стороны к 17 у каждого подпроекта.
+            if (androidExt != null) {
+                androidExt.compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_17
+                    targetCompatibility JavaVersion.VERSION_17
+                }
+            }
+            project.tasks.configureEach { t ->
+                if (t instanceof JavaCompile) {
+                    t.sourceCompatibility = "17"
+                    t.targetCompatibility = "17"
+                } else if (t.class.name.contains("KotlinCompile")) {
+                    try {
+                        t.compilerOptions.jvmTarget.set(
+                            org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+                    } catch (Throwable ignored) {
+                        try { t.kotlinOptions.jvmTarget = "17" } catch (Throwable ignored2) { }
                     }
                 }
             }
