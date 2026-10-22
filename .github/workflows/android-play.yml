@@ -187,7 +187,14 @@ jobs:
           sed -i "s/org.gradle.jvmargs=-Xmx1024M/org.gradle.jvmargs=-Xmx2g/g" ./flutter/android/gradle.properties
           cp ${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/
           pushd flutter
-          flutter build appbundle --release --target-platform android-arm64
+          set -o pipefail
+          if ! flutter build appbundle --release --target-platform android-arm64 2>&1 | tee /tmp/aab.log; then
+            # логи job видны только после входа в GitHub, поэтому выносим суть
+            # ошибки в аннотацию прогона - она доступна без входа
+            TAIL=$(grep -E "FAILURE|What went wrong|error:|Error|Caused by|^> " /tmp/aab.log | tail -20 | tr '\n' '~' | cut -c1-2500)
+            echo "::error::$TAIL"
+            exit 1
+          fi
           popd
           mv ./flutter/build/app/outputs/bundle/release/app-release.aab ./teamdesk-${{ env.VERSION }}.aab
           ls -l ./teamdesk-${{ env.VERSION }}.aab
