@@ -11,7 +11,9 @@ on:
 env:
   FLUTTER_VERSION: "3.24.5"
   RUST_VERSION: "1.75"
-  NDK_VERSION: "r27c"
+  NDK_VERSION: "r28c"
+  CARGO_NDK_VERSION: "3.1.2"
+  VCPKG_COMMIT_ID: "120deac3062162151622ca4860575a33844ba10b"
   VERSION: "1.4.8"
 
 jobs:
@@ -53,8 +55,19 @@ jobs:
           toolchain: ${{ env.RUST_VERSION }}
           targets: aarch64-linux-android
 
-      - name: Install cargo-ndk
-        run: cargo install cargo-ndk --version 3.5.4 --locked
+      - name: Setup vcpkg with Github Actions binary cache
+        uses: lukka/run-vcpkg@b1a0dd252f06b9e25b3c022a9a03bd7a427fb6a2 # v11
+        with:
+          vcpkgGitCommitId: ${{ env.VCPKG_COMMIT_ID }}
+          doNotCache: false
+
+      - name: Build Android native deps (vcpkg)
+        shell: bash
+        run: |
+          if ! ./flutter/build_android_deps.sh arm64-v8a; then
+            find "${VCPKG_ROOT}/" -name "*.log" | while read -r l; do echo "$l:"; cat "$l"; echo; done
+            exit 1
+          fi
 
       - name: Restore bridge files
         uses: actions/download-artifact@v4
@@ -78,16 +91,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y                clang cmake curl gcc-multilib git g++ g++-multilib                libayatana-appindicator3-dev libasound2-dev libc6-dev libclang-dev                libunwind-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev                libgtk-3-dev libpam0g-dev libpulse-dev libva-dev                libxcb-randr0-dev libxcb-shape0-dev libxcb-xfixes0-dev                libxdo-dev libxfixes-dev llvm-dev nasm ninja-build                openjdk-17-jdk-headless pkg-config tree wget
 
-      - name: Build Rust lib (aarch64)
+      - name: Build native library (aarch64)
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
           ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           rustup target add aarch64-linux-android
-          cargo ndk --platform 21 --target aarch64-linux-android build --release --features flutter
-          mkdir -p flutter/android/app/src/main/jniLibs/arm64-v8a
-          cp "$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so" flutter/android/app/src/main/jniLibs/arm64-v8a/
-          cp target/aarch64-linux-android/release/liblibteamdesk.so flutter/android/app/src/main/jniLibs/arm64-v8a/libteamdesk.so
+          cargo install cargo-ndk --version ${{ env.CARGO_NDK_VERSION }} --locked
+          ./flutter/ndk_arm64.sh
+          mkdir -p ./flutter/android/app/src/main/jniLibs/arm64-v8a
+          cp ./target/aarch64-linux-android/release/liblibteamdesk.so ./flutter/android/app/src/main/jniLibs/arm64-v8a/libteamdesk.so
+          cp "$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so" ./flutter/android/app/src/main/jniLibs/arm64-v8a/
 
       - name: Check signing secrets
         id: sig
