@@ -1,0 +1,138 @@
+name: Android App Bundle (Google Play)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/android-play.yml'
+      - 'flutter/android/**'
+
+env:
+  FLUTTER_VERSION: "3.24.5"
+  RUST_VERSION: "1.75"
+  NDK_VERSION: "r27c"
+  VERSION: "1.4.8"
+
+jobs:
+  generate-bridge:
+    uses: ./.github/workflows/bridge.yml
+
+  build-aab:
+    name: build teamdesk app bundle
+    needs: [generate-bridge]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - name: Setup NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: ${{ env.NDK_VERSION }}
+          add-to-path: true
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          targets: aarch64-linux-android
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk --version 3.5.4 --locked
+
+      - name: Restore bridge files
+        uses: actions/download-artifact@v4
+        with:
+          name: bridge-artifact
+          path: ./
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang cmake curl gcc git libayatana-appindicator3-dev \
+            libasound2-dev libclang-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+            libgtk-3-dev libpam0g-dev libpulse-dev libva-dev libvdpau-dev libxcb-randr0-dev \
+            libxcb-shape0-dev libxcb-xfixes0-dev libxdo-dev libxfixes-dev nasm ninja-build \
+            pkg-config python3 tree wget
+
+      - name: Build Rust lib (aarch64)
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
+        run: |
+          rustup target add aarch64-linux-android
+          cargo ndk --platform 21 --target aarch64-linux-android build --release --features flutter
+          mkdir -p flutter/android/app/src/main/jniLibs/arm64-v8a
+          cp "$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so" flutter/android/app/src/main/jniLibs/arm64-v8a/
+          cp target/aarch64-linux-android/release/liblibteamdesk.so flutter/android/app/src/main/jniLibs/arm64-v8a/libteamdesk.so
+
+      - name: Check signing secrets
+        id: sig
+        env:
+          KS: ${{ secrets.ANDROID_UPLOAD_KEYSTORE }}
+        run: |
+          if [ -n "$KS" ]; then echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else echo "enabled=false" >> "$GITHUB_OUTPUT"; echo "::warning::ANDROID_UPLOAD_KEYSTORE не задан — собираю неподписанный AAB"; fi
+
+      - name: Prepare upload keystore
+        if: steps.sig.outputs.enabled == 'true'
+        env:
+          KS: ${{ secrets.ANDROID_UPLOAD_KEYSTORE }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$KS" | base64 -d > flutter/android/upload.jks
+          cat > flutter/android/key.properties <<PROPS
+          storeFile=upload.jks
+          storePassword=$KS_PASS
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASS
+          PROPS
+
+      - name: Build app bundle
+        shell: bash
+        run: |
+          sed -i "s/org.gradle.jvmargs=-Xmx1024M/org.gradle.jvmargs=-Xmx4g/g" flutter/android/gradle.properties || true
+          if [ "${{ steps.sig.outputs.enabled }}" != "true" ]; then
+            sed -i "s/signingConfig signingConfigs.release//g" flutter/android/app/build.gradle
+          fi
+          pushd flutter
+          flutter build appbundle --release --target-platform android-arm64 \
+            --build-name "$VERSION" --build-number "${{ github.run_number }}"
+          popd
+          ls -la flutter/build/app/outputs/bundle/release/
+
+      - name: Verify bundle signature
+        if: steps.sig.outputs.enabled == 'true'
+        run: |
+          AAB=$(find flutter/build/app/outputs/bundle/release -name '*.aab' | head -1)
+          "$ANDROID_HOME"/build-tools/34.0.0/apksigner verify --print-certs "$AAB" 2>/dev/null || jarsigner -verify -verbose:summary "$AAB" | head -5
+
+      - name: Rename and upload
+        run: |
+          AAB=$(find flutter/build/app/outputs/bundle/release -name '*.aab' | head -1)
+          cp "$AAB" "teamdesk-${VERSION}-${{ github.run_number }}.aab"
+          sha256sum "teamdesk-${VERSION}-${{ github.run_number }}.aab"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: teamdesk-aab
+          path: teamdesk-*.aab
+          if-no-files-found: error
