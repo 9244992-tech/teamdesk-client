@@ -1,4 +1,3 @@
-# ключ подписи в секретах репозитория обновлён 23.10.2026
 name: Android App Bundle (Google Play)
 
 on:
@@ -201,7 +200,8 @@ jobs:
           if ! flutter build appbundle --release --target-platform android-arm64 2>&1 | tee /tmp/aab.log; then
             # логи job видны только после входа в GitHub, поэтому выносим суть
             # ошибки в аннотацию прогона - она доступна без входа
-            TAIL=$(tail -45 /tmp/aab.log | tr '\n' '~' | cut -c1-2500)
+            # берём именно хвост: причину gradle печатает последней
+            TAIL=$(tail -60 /tmp/aab.log | tr '\n' '~' | tail -c 2400)
             echo "::error::$TAIL"
             exit 1
           fi
