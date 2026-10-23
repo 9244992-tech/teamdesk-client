@@ -156,7 +156,10 @@ jobs:
           KEYPASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           if [ -n "$KS" ]; then
-            printf '%s' "$KS" | tr -d '\r\n \t' > /tmp/ks.b64
+            # при вставке секрета в веб-форму к строке иногда примешиваются
+            # посторонние символы, поэтому оставляем только алфавит base64,
+            # а подлинность содержимого проверяем ниже через keytool
+            printf '%s' "$KS" | tr -cd 'A-Za-z0-9+/=' > /tmp/ks.b64
             echo "длина base64: $(wc -c < /tmp/ks.b64) символов"
             if ! base64 -d /tmp/ks.b64 > ./flutter/android/upload.jks 2>/tmp/b64.err; then
               echo "::error::keystore не раскодировался: $(cat /tmp/b64.err | head -2) | длина $(wc -c < /tmp/ks.b64) | начало $(cut -c1-12 /tmp/ks.b64) | конец $(tail -c 12 /tmp/ks.b64)"
@@ -168,6 +171,7 @@ jobs:
               exit 1
             fi
             grep -i 'PrivateKeyEntry\|Certificate fingerprint' /tmp/kt.log | head -2
+            echo "::warning::keystore прочитан: $(grep -i 'Certificate fingerprint' /tmp/kt.log | head -1 | tr -d '\n')"
             {
               echo "storeFile=upload.jks"
               echo "storePassword=$STOREPASS"
