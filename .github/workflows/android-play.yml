@@ -58,15 +58,22 @@ jobs:
                 libxcb-randr0-dev libxcb-shape0-dev libxcb-xfixes0-dev \
                 libxdo-dev libxfixes-dev llvm-dev nasm ninja-build \
                 openjdk-17-jdk-headless pkg-config tree wget"
-          APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30"
+          APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20"
           ok=0
           for attempt in 1 2 3; do
-            if sudo timeout 600 apt-get $APT_OPTS update \
-               && sudo timeout 1800 apt-get $APT_OPTS install -y $PKGS; then
+            if [ "$attempt" = 2 ]; then
+              # зеркала azure у раннеров регулярно залипают - уходим на основное
+              echo "::warning::переключаюсь с зеркал azure на archive.ubuntu.com"
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' \
+                   /etc/apt/sources.list /etc/apt/sources.list.d/*.list \
+                   /etc/apt/sources.list.d/*.sources 2>/dev/null || true
+            fi
+            if sudo timeout 300 apt-get $APT_OPTS update \
+               && sudo timeout 900 apt-get $APT_OPTS install -y $PKGS; then
               ok=1; break
             fi
-            echo "::warning::попытка $attempt установки зависимостей не удалась, повтор через 30 с"
-            sleep 30
+            echo "::warning::попытка $attempt установки зависимостей не удалась, повтор через 20 с"
+            sleep 20
           done
           if [ "$ok" != 1 ]; then
             echo "::error::зеркала apt не ответили за три попытки"
