@@ -1481,7 +1481,7 @@ class AndroidPermissionManager {
 
   static bool isWaitingFile() {
     if (_completer != null) {
-      return !_completer!.isCompleted && _current == kManageExternalStorage;
+      return !_completer!.isCompleted && _current == kStorageAccess;
     }
     return false;
   }
@@ -2595,8 +2595,8 @@ connect(BuildContext context, String id,
   } else {
     if (isFileTransfer) {
       if (isAndroid) {
-        if (!await AndroidPermissionManager.check(kManageExternalStorage)) {
-          if (!await AndroidPermissionManager.request(kManageExternalStorage)) {
+        if (!await AndroidPermissionManager.check(kStorageAccess)) {
+          if (!await AndroidPermissionManager.request(kStorageAccess)) {
             return;
           }
         }

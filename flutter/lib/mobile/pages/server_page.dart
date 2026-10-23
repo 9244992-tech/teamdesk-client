@@ -225,10 +225,10 @@ class _ServerPageState extends State<ServerPage> {
 
 void checkService() async {
   gFFI.invokeMethod("check_service");
-  // for Android 10/11, request MANAGE_EXTERNAL_STORAGE permission from system setting page
+  // for Android 10/11, request storage permission from system setting page
   if (AndroidPermissionManager.isWaitingFile() && !gFFI.serverModel.fileOk) {
-    AndroidPermissionManager.complete(kManageExternalStorage,
-        await AndroidPermissionManager.check(kManageExternalStorage));
+    AndroidPermissionManager.complete(kStorageAccess,
+        await AndroidPermissionManager.check(kStorageAccess));
     debugPrint("file permission finished");
   }
 }

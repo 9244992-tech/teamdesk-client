@@ -211,7 +211,7 @@ class ServerModel with ChangeNotifier {
     }
 
     // file
-    if (!await AndroidPermissionManager.check(kManageExternalStorage)) {
+    if (!await AndroidPermissionManager.check(kStorageAccess)) {
       _fileOk = false;
       bind.mainSetOption(key: kOptionEnableFileTransfer, value: "N");
     } else {
@@ -320,9 +320,9 @@ class ServerModel with ChangeNotifier {
       await showClientsMayNotBeChangedAlert(parent.target);
     }
     if (!_fileOk &&
-        !await AndroidPermissionManager.check(kManageExternalStorage)) {
+        !await AndroidPermissionManager.check(kStorageAccess)) {
       final res =
-          await AndroidPermissionManager.request(kManageExternalStorage);
+          await AndroidPermissionManager.request(kStorageAccess);
       if (!res) {
         showToast(translate('Failed'));
         return;
@@ -418,8 +418,8 @@ class ServerModel with ChangeNotifier {
       if (bind.mainGetLocalOption(key: kOptionDisableFloatingWindow) != 'Y') {
         await checkFloatingWindowPermission();
       }
-      if (!await AndroidPermissionManager.check(kManageExternalStorage)) {
-        await AndroidPermissionManager.request(kManageExternalStorage);
+      if (!await AndroidPermissionManager.check(kStorageAccess)) {
+        await AndroidPermissionManager.request(kStorageAccess);
       }
       final res = await parent.target?.dialogManager
           .show<bool>((setState, close, context) {
