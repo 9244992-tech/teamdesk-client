@@ -166,7 +166,18 @@ jobs:
           KEYPASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           if [ -n "$KS" ]; then
-            echo "$KS" | tr -d '\r\n ' | base64 -d > ./flutter/android/upload.jks
+            printf '%s' "$KS" | tr -d '\r\n \t' > /tmp/ks.b64
+            echo "длина base64: $(wc -c < /tmp/ks.b64) символов"
+            if ! base64 -d /tmp/ks.b64 > ./flutter/android/upload.jks 2>/tmp/b64.err; then
+              echo "::error::keystore не раскодировался: $(cat /tmp/b64.err | head -2) | длина $(wc -c < /tmp/ks.b64) | начало $(cut -c1-12 /tmp/ks.b64) | конец $(tail -c 12 /tmp/ks.b64)"
+              exit 1
+            fi
+            echo "keystore: $(wc -c < ./flutter/android/upload.jks) байт"
+            if ! keytool -list -keystore ./flutter/android/upload.jks -storepass "$STOREPASS" > /tmp/kt.log 2>&1; then
+              echo "::error::keytool не открыл keystore: $(tail -3 /tmp/kt.log | tr '\n' ' ')"
+              exit 1
+            fi
+            grep -i 'PrivateKeyEntry\|Certificate fingerprint' /tmp/kt.log | head -2
             {
               echo "storeFile=upload.jks"
               echo "storePassword=$STOREPASS"
