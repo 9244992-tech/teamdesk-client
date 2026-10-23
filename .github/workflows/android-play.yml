@@ -161,12 +161,12 @@ jobs:
             # а подлинность содержимого проверяем ниже через keytool
             printf '%s' "$KS" | tr -cd 'A-Za-z0-9+/=' > /tmp/ks.b64
             echo "длина base64: $(wc -c < /tmp/ks.b64) символов"
-            if ! base64 -d /tmp/ks.b64 > ./flutter/android/upload.jks 2>/tmp/b64.err; then
+            if ! base64 -d /tmp/ks.b64 > ./flutter/android/app/upload.jks 2>/tmp/b64.err; then
               echo "::error::keystore не раскодировался: $(cat /tmp/b64.err | head -2) | длина $(wc -c < /tmp/ks.b64) | начало $(cut -c1-12 /tmp/ks.b64) | конец $(tail -c 12 /tmp/ks.b64)"
               exit 1
             fi
-            echo "keystore: $(wc -c < ./flutter/android/upload.jks) байт"
-            if ! keytool -list -keystore ./flutter/android/upload.jks -storepass "$STOREPASS" > /tmp/kt.log 2>&1; then
+            echo "keystore: $(wc -c < ./flutter/android/app/upload.jks) байт"
+            if ! keytool -list -keystore ./flutter/android/app/upload.jks -storepass "$STOREPASS" > /tmp/kt.log 2>&1; then
               echo "::error::keytool не открыл keystore: $(tail -3 /tmp/kt.log | tr '\n' ' ')"
               exit 1
             fi
