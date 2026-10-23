@@ -725,39 +725,29 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       - name: Install dependencies
+        env:
+          DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-               clang \
-               cmake \
-               curl \
-               gcc-multilib \
-               git \
-               g++ \
-               g++-multilib \
-               libayatana-appindicator3-dev \
-               libasound2-dev \
-               libc6-dev \
-               libclang-dev \
-               libunwind-dev \
-               libgstreamer1.0-dev \
-               libgstreamer-plugins-base1.0-dev \
-               libgtk-3-dev \
-               libpam0g-dev \
-               libpulse-dev \
-               libva-dev \
-               libxcb-randr0-dev \
-               libxcb-shape0-dev \
-               libxcb-xfixes0-dev \
-               libxdo-dev \
-               libxfixes-dev \
-               llvm-dev \
-               nasm \
-               ninja-build \
-               openjdk-17-jdk-headless \
-               pkg-config \
-               tree \
-               wget
+          # зеркала apt у раннеров периодически залипают: без таймаута шаг
+          # висит часами. Таймаут, три попытки и запасное зеркало.
+          PKGS="clang cmake curl gcc-multilib git g++ g++-multilib                 libayatana-appindicator3-dev libasound2-dev libc6-dev libclang-dev                 libunwind-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev                 libgtk-3-dev libpam0g-dev libpulse-dev libva-dev                 libxcb-randr0-dev libxcb-shape0-dev libxcb-xfixes0-dev                 libxdo-dev libxfixes-dev llvm-dev nasm ninja-build                 openjdk-17-jdk-headless pkg-config tree wget"
+          APT_OPTS="-o Acquire::Retries=3 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20"
+          ok=0
+          for attempt in 1 2 3; do
+            if [ "$attempt" = 2 ]; then
+              echo "::warning::переключаюсь с зеркал azure на archive.ubuntu.com"
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g'                    /etc/apt/sources.list /etc/apt/sources.list.d/*.list                    /etc/apt/sources.list.d/*.sources 2>/dev/null || true
+            fi
+            if sudo timeout 300 apt-get $APT_OPTS update                && sudo timeout 900 apt-get $APT_OPTS install -y $PKGS; then
+              ok=1; break
+            fi
+            echo "::warning::попытка $attempt установки зависимостей не удалась, повтор через 20 с"
+            sleep 20
+          done
+          if [ "$ok" != 1 ]; then
+            echo "::error::зеркала apt не ответили за три попытки"
+            exit 1
+          fi
 
       - name: Checkout source code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
