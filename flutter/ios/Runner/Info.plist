@@ -71,9 +71,9 @@
   <key>io.flutter.embedded_views_preview</key>
   <true/>
   <key>NSCameraUsageDescription</key>
-  <string>This app needs camera access to scan QR codes</string>
+  <string>Камера нужна, чтобы отсканировать QR-код с идентификатором устройства, к которому вы подключаетесь.</string>
   <key>NSPhotoLibraryUsageDescription</key>
-  <string>This app needs photo library access to get QR codes from image</string>
+  <string>Доступ к фотографиям нужен, чтобы распознать QR-код подключения на сохранённом снимке.</string>
   <key>NSLocalNetworkUsageDescription</key>
   <string>Teamdesk подключается к компьютерам в вашей локальной сети напрямую, без передачи данных через интернет.</string>
   <key>NSMicrophoneUsageDescription</key>
