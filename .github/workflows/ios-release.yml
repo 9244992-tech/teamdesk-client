@@ -22,7 +22,7 @@ jobs:
   build-ios:
     name: build, sign and upload teamdesk ios
     needs: [generate-bridge]
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - name: Export GitHub Actions cache environment variables
         uses: actions/github-script@v7
@@ -30,6 +30,17 @@ jobs:
           script: |
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+      - name: Select newest Xcode
+        shell: bash
+        run: |
+          # App Store принимает сборки только с iOS 26 SDK и новее, поэтому берём
+          # самый свежий Xcode из тех, что стоят на раннере.
+          LATEST=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+          echo "доступные: $(ls -d /Applications/Xcode*.app | tr n  )"
+          sudo xcode-select -s "$LATEST"
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
 
       - name: Install dependencies
         run: brew install nasm yasm
