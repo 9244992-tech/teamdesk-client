@@ -117,6 +117,25 @@ jobs:
           echo "в связке ключей:"
           security find-identity -v -p codesigning "$KEYCHAIN" | sed 's/[0-9A-F]\{40\}/<отпечаток>/'
 
+      - name: Install provisioning profile
+        shell: bash
+        env:
+          APPLE_PROVISIONING_PROFILE: ${{ secrets.APPLE_PROVISIONING_PROFILE }}
+        run: |
+          if [ -z "$APPLE_PROVISIONING_PROFILE" ]; then
+            echo "::warning::профиль подписи не задан - архив будет неподписанным"
+            exit 0
+          fi
+          set -euo pipefail
+          DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+          mkdir -p "$DIR"
+          PROFILE="$DIR/teamdesk.mobileprovision"
+          printf '%s' "$APPLE_PROVISIONING_PROFILE" | base64 --decode > "$PROFILE"
+          # Имя профиля нужно шагу экспорта, поэтому читаем его из самого файла.
+          NAME=$(security cms -D -i "$PROFILE" | plutil -extract Name raw -)
+          echo "PROFILE_NAME=$NAME" >> "$GITHUB_ENV"
+          echo "установлен профиль: $NAME"
+
       - name: Check signing secrets
         id: sig
         shell: bash
@@ -127,7 +146,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APPLE_DIST_CERT_P12: ${{ secrets.APPLE_DIST_CERT_P12 }}
         run: |
-          if [ -n "$ASC_KEY_ID" ] && [ -n "$ASC_ISSUER_ID" ] && [ -n "$ASC_KEY_P8" ] && [ -n "$APPLE_TEAM_ID" ] && [ -n "$APPLE_DIST_CERT_P12" ]; then
+          if [ -n "$ASC_KEY_ID" ] && [ -n "$ASC_ISSUER_ID" ] && [ -n "$ASC_KEY_P8" ] && [ -n "$APPLE_TEAM_ID" ] && [ -n "$APPLE_DIST_CERT_P12" ] && [ -n "$APPLE_PROVISIONING_PROFILE" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
@@ -150,7 +169,9 @@ jobs:
           cd flutter/ios
           xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Runner.xcarchive" DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic CODE_SIGNING_ALLOWED=NO "${AUTH[@]}" archive
           PL="$RUNNER_TEMP/ExportOptions.plist"
-          /usr/libexec/PlistBuddy -c "Add :method string app-store-connect" -c "Add :destination string upload" -c "Add :teamID string $APPLE_TEAM_ID" -c "Add :signingStyle string automatic" -c "Add :uploadSymbols bool true" "$PL"
+          # Подпись ручная: профиль заведён заранее, автоматическую Xcode сделать не может
+          # - у ключа App Store Connect нет прав администратора на создание профилей.
+          /usr/libexec/PlistBuddy -c "Add :method string app-store-connect" -c "Add :destination string upload" -c "Add :teamID string $APPLE_TEAM_ID" -c "Add :signingStyle string manual" -c "Add :signingCertificate string Apple Distribution" -c "Add :uploadSymbols bool true" -c "Add :provisioningProfiles dict" -c "Add :provisioningProfiles:su.teamdesk.client string $PROFILE_NAME" "$PL"
           xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Runner.xcarchive" -exportOptionsPlist "$PL" -exportPath "$RUNNER_TEMP/export" "${AUTH[@]}"
           rm -f "$KEY_PATH"
           echo "Uploaded build ${{ github.run_number }} to App Store Connect"
