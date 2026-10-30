@@ -89,6 +89,34 @@ jobs:
           flutter build ios --release --no-codesign --build-name "$APP_VERSION" --build-number "${{ github.run_number }}"
           popd
 
+      - name: Import distribution certificate
+        shell: bash
+        env:
+          APPLE_DIST_CERT_P12: ${{ secrets.APPLE_DIST_CERT_P12 }}
+          APPLE_DIST_CERT_PASSWORD: ${{ secrets.APPLE_DIST_CERT_PASSWORD }}
+        run: |
+          if [ -z "$APPLE_DIST_CERT_P12" ]; then
+            echo "::warning::сертификат распространения не задан - архив будет неподписанным"
+            exit 0
+          fi
+          set -euo pipefail
+          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD=$(openssl rand -base64 24)
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          # Связка не должна закрыться посреди сборки, отсюда таймаут в шесть часов.
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
+          P12="$RUNNER_TEMP/dist.p12"
+          printf '%s' "$APPLE_DIST_CERT_P12" | base64 --decode > "$P12"
+          security import "$P12" -k "$KEYCHAIN" -P "$APPLE_DIST_CERT_PASSWORD" -A -t cert -f pkcs12
+          # Без этого codesign при каждом обращении просит подтверждение из интерфейса.
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN" >/dev/null
+          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
+          security default-keychain -s "$KEYCHAIN"
+          rm -f "$P12"
+          echo "в связке ключей:"
+          security find-identity -v -p codesigning "$KEYCHAIN" | sed 's/[0-9A-F]\{40\}/<отпечаток>/'
+
       - name: Check signing secrets
         id: sig
         shell: bash
@@ -97,8 +125,9 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_DIST_CERT_P12: ${{ secrets.APPLE_DIST_CERT_P12 }}
         run: |
-          if [ -n "$ASC_KEY_ID" ] && [ -n "$ASC_ISSUER_ID" ] && [ -n "$ASC_KEY_P8" ] && [ -n "$APPLE_TEAM_ID" ]; then
+          if [ -n "$ASC_KEY_ID" ] && [ -n "$ASC_ISSUER_ID" ] && [ -n "$ASC_KEY_P8" ] && [ -n "$APPLE_TEAM_ID" ] && [ -n "$APPLE_DIST_CERT_P12" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=false" >> "$GITHUB_OUTPUT"
