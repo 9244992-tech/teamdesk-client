@@ -1,6 +1,6 @@
 [package]
 name = "teamdesk"
-version = "1.4.8"
+version = "1.4.9"
 authors = ["teamdesk <info@teamdesk.su>"]
 edition = "2021"
 build= "build.rs"
