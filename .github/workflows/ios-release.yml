@@ -13,7 +13,7 @@ env:
   FLUTTER_VERSION: "3.24.5"
   RUST_VERSION: "1.75"
   VCPKG_COMMIT_ID: "120deac3062162151622ca4860575a33844ba10b"
-  APP_VERSION: "1.4.8"
+  APP_VERSION: "1.4.9"
 
 jobs:
   generate-bridge:
