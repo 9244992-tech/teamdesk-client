@@ -119,7 +119,7 @@ jobs:
           printf '%s\n' "$ASC_KEY_P8" > "$KEY_PATH"
           AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEY_PATH" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
           cd flutter/ios
-          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Runner.xcarchive" DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic "${AUTH[@]}" archive
+          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/Runner.xcarchive" DEVELOPMENT_TEAM="$APPLE_TEAM_ID" CODE_SIGN_STYLE=Automatic CODE_SIGN_IDENTITY="Apple Distribution" "${AUTH[@]}" archive
           PL="$RUNNER_TEMP/ExportOptions.plist"
           /usr/libexec/PlistBuddy -c "Add :method string app-store-connect" -c "Add :destination string upload" -c "Add :teamID string $APPLE_TEAM_ID" -c "Add :signingStyle string automatic" -c "Add :uploadSymbols bool true" "$PL"
           xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/Runner.xcarchive" -exportOptionsPlist "$PL" -exportPath "$RUNNER_TEMP/export" "${AUTH[@]}"
