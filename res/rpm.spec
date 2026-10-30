@@ -1,5 +1,5 @@
 Name:       teamdesk
-Version:    1.4.8
+Version:    1.4.9
 Release:    0
 Summary:    RPM package
 License:    GPL-3.0
