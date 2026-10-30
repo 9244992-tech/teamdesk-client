@@ -48,7 +48,7 @@ fn main() {
     );
     let matches = App::new("teamdesk")
         .version(crate::VERSION)
-        .author("Purslane Tech Pte. Ltd.<info@teamdesk.su>")
+        .author("UK MAKS LLC <info@teamdesk.su>")
         .about("Teamdesk command line tool")
         .args_from_usage(&args)
         .get_matches();
