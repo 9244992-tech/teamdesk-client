@@ -213,6 +213,7 @@ exclude = ["vdi/host", "examples/custom_plugin"]
 libxdo-sys = { path = "libs/libxdo-sys-stub" }
 
 [package.metadata.winres]
+CompanyName = "UK MAKS LLC"
 LegalCopyright = "Copyright © 2026 UK MAKS LLC. All rights reserved."
 ProductName = "Teamdesk"
 FileDescription = "Teamdesk Remote Desktop"
