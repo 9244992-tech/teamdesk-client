@@ -26,6 +26,7 @@ windows = { version = "0.61", features = [
 native-windows-gui = {version = "1.0", default-features = false, features = ["animation-timer", "image-decoder"]}
 
 [package.metadata.winres]
+CompanyName = "UK MAKS LLC"
 LegalCopyright = "Copyright © 2026 UK MAKS LLC. All rights reserved."
 ProductName = "Teamdesk"
 OriginalFilename = "teamdesk.exe"
