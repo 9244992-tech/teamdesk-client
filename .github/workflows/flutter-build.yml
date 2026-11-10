@@ -955,7 +955,7 @@ jobs:
           base64 -d /tmp/ks16.b64 > /tmp/ks16.jks
           for APK in signed-apk/*.apk; do
             # zipalign двигает записи и тем самым рвёт подпись, поэтому подписываем после него
-            "$BT/zipalign" -p -f -P 16 4 "$APK" "$APK.aligned"
+            "$BT/zipalign" -f -P 16 4 "$APK" "$APK.aligned"
             "$BT/apksigner" sign --ks /tmp/ks16.jks --ks-pass "pass:$ANDROID_KEYSTORE_PASSWORD"               --ks-key-alias "$ANDROID_KEY_ALIAS" --key-pass "pass:$ANDROID_KEY_PASSWORD"               --out "$APK.resigned" "$APK.aligned"
             mv "$APK.resigned" "$APK"
             rm -f "$APK.aligned" "$APK.resigned.idsig" "$APK.idsig"
