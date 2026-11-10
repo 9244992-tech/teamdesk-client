@@ -937,6 +937,37 @@ jobs:
           echo "ANDROID_SIGN_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
           echo Last build tool version is: $BUILD_TOOL_VERSION
 
+      - name: Выровнять APK под страницу 16 КБ и переподписать
+        shell: bash
+        env:
+          ANDROID_UPLOAD_KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${ANDROID_UPLOAD_KEYSTORE:-}" ]; then
+            echo "::warning::ключа подписи нет - выравнивание пропущено"
+            exit 0
+          fi
+          BT="/usr/local/lib/android/sdk/build-tools/${ANDROID_SIGN_TOOL_VERSION}"
+          printf '%s' "$ANDROID_UPLOAD_KEYSTORE" | tr -cd 'A-Za-z0-9+/=' > /tmp/ks16.b64
+          base64 -d /tmp/ks16.b64 > /tmp/ks16.jks
+          for APK in signed-apk/*.apk; do
+            # zipalign двигает записи и тем самым рвёт подпись, поэтому подписываем после него
+            "$BT/zipalign" -f -P 16 4 "$APK" "$APK.aligned"
+            "$BT/apksigner" sign --ks /tmp/ks16.jks --ks-pass "pass:$ANDROID_KEYSTORE_PASSWORD"               --ks-key-alias "$ANDROID_KEY_ALIAS" --key-pass "pass:$ANDROID_KEY_PASSWORD"               --out "$APK.resigned" "$APK.aligned"
+            mv "$APK.resigned" "$APK"
+            rm -f "$APK.aligned" "$APK.resigned.idsig" "$APK.idsig"
+            if ! "$BT/zipalign" -c -P 16 -v 4 "$APK" > /dev/null; then
+              echo "::error::выравнивание 16 КБ не получилось - на Android 15 приложение не запустится"
+              exit 1
+            fi
+            "$BT/apksigner" verify "$APK"
+            echo "выровнен под 16 КБ и подписан: $APK"
+          done
+          rm -f /tmp/ks16.jks /tmp/ks16.b64
+
       - uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407 # v1
         name: Sign app APK
         if: env.ANDROID_SIGNING_KEY != null
