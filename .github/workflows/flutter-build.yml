@@ -937,6 +937,19 @@ jobs:
           echo "ANDROID_SIGN_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
           echo Last build tool version is: $BUILD_TOOL_VERSION
 
+      - name: Выровнять APK под страницу 16 КБ
+        if: env.ANDROID_SIGNING_KEY != null
+        shell: bash
+        run: |
+          set -euo pipefail
+          BT="/usr/local/lib/android/sdk/build-tools/${ANDROID_SIGN_TOOL_VERSION}"
+          for APK in signed-apk/*.apk; do
+            "$BT/zipalign" -p -f -P 16 4 "$APK" "$APK.aligned"
+            mv "$APK.aligned" "$APK"
+            "$BT/zipalign" -c -P 16 -v 4 "$APK" > /dev/null
+            echo "выровнен под 16 КБ: $APK"
+          done
+
       - uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407 # v1
         name: Sign app APK
         if: env.ANDROID_SIGNING_KEY != null
@@ -950,6 +963,19 @@ jobs:
         env:
           # env.ANDROID_SIGN_TOOL_VERSION is set by Step "Setup sign tool version variable"
           BUILD_TOOLS_VERSION: ${{ env.ANDROID_SIGN_TOOL_VERSION }}
+
+      - name: Проверить выравнивание подписанного APK
+        if: env.ANDROID_SIGNING_KEY != null
+        shell: bash
+        run: |
+          set -euo pipefail
+          BT="/usr/local/lib/android/sdk/build-tools/${ANDROID_SIGN_TOOL_VERSION}"
+          APK="${{ steps.sign-teamdesk.outputs.signedReleaseFile }}"
+          if ! "$BT/zipalign" -c -P 16 -v 4 "$APK" > /dev/null; then
+            echo "::error::после подписи выравнивание 16 КБ потеряно - приложение не запустится на Android 15"
+            exit 1
+          fi
+          echo "подписанный APK выровнен под 16 КБ"
 
       - name: Upload Artifacts
         if: env.ANDROID_SIGNING_KEY != null && env.UPLOAD_ARTIFACT == 'true'
